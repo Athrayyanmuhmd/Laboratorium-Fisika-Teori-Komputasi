@@ -11,11 +11,19 @@
             <div class="flex items-center space-x-3 mb-3">
                 <div class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     <i class="fas fa-user-cog mr-1"></i>
-                    {{ ucfirst(str_replace('_', ' ', Auth::user()->role)) }}
+                    @if(Auth::user()->isSuperAdmin())
+                        Super Admin
+                    @elseif(Auth::user()->role === 'dosen')
+                        Dosen/Peneliti
+                    @elseif(Auth::user()->role === 'lab_admin')
+                        Laboran
+                    @else
+                        {{ ucfirst(str_replace('_', ' ', Auth::user()->role)) }}
+                    @endif
                 </div>
                 @if(Auth::user()->role !== 'super_admin')
                     <div class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">
-                        Lab Operations Only
+                        Lab Operations Management
                     </div>
                 @endif
             </div>

@@ -515,15 +515,19 @@
                         <span class="text-white text-lg font-bold">
                             @if(Auth::user()->isSuperAdmin())
                                 Super Admin
+                            @elseif(Auth::user()->role === 'dosen')
+                                Dosen/Peneliti
                             @else
-                                Lab Admin
+                                Laboran
                             @endif
                         </span>
                         <div class="text-blue-300 text-xs">
                             @if(Auth::user()->isSuperAdmin())
                                 Full System Access
+                            @elseif(Auth::user()->role === 'dosen')
+                                Lab Operations Access
                             @else
-                                Lab Operations Only
+                                Lab Operations Management
                             @endif
                         </div>
                     </div>
@@ -580,10 +584,10 @@
                         <div class="mx-4 my-4 p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
                             <div class="flex items-center text-yellow-300 text-xs">
                                 <i class="fas fa-info-circle mr-2"></i>
-                                <span class="font-medium">Lab Operations Access Only</span>
+                                <span class="font-medium">Lab Operations Management</span>
                             </div>
                             <div class="text-yellow-200 text-xs mt-1">
-                                Contact Super Admin for full access
+                                Contact Super Admin for system-wide access
                             </div>
                         </div>
                     @endunless
@@ -644,7 +648,17 @@
                         <div class="flex items-center space-x-3 bg-gray-50 rounded-xl p-2">
                             <div class="text-right">
                                 <div class="text-sm font-semibold text-gray-900">{{ Auth::user()->name }}</div>
-                                <div class="text-xs text-gray-500">{{ ucfirst(str_replace('_', ' ', Auth::user()->role)) }}</div>
+                                <div class="text-xs text-gray-500">
+                                    @if(Auth::user()->isSuperAdmin())
+                                        Super Admin
+                                    @elseif(Auth::user()->role === 'dosen')
+                                        Dosen/Peneliti
+                                    @elseif(Auth::user()->role === 'lab_admin')
+                                        Laboran
+                                    @else
+                                        {{ ucfirst(str_replace('_', ' ', Auth::user()->role)) }}
+                                    @endif
+                                </div>
                             </div>
                             <div class="user-avatar h-10 w-10 rounded-xl flex items-center justify-center">
                                 <span class="text-white text-sm font-bold">{{ substr(Auth::user()->name, 0, 1) }}</span>

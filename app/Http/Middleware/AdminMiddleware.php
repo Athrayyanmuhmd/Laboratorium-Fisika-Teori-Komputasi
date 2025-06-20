@@ -22,14 +22,9 @@ class AdminMiddleware
 
         $user = Auth::user();
         
-        // Super Admin should use their own dashboard, redirect them
-        if ($user->isSuperAdmin()) {
-            return redirect()->route('super-admin.dashboard')->with('info', 'Anda dialihkan ke Super Admin Dashboard.');
-        }
-        
-        // Allow lab_admin and dosen roles only
-        if (!$user->isLabAdmin() && $user->role !== 'dosen') {
-            abort(403, 'Unauthorized. Lab Admin access required.');
+        // Allow all admin roles (super_admin, lab_admin, dosen)
+        if (!$user->isAdmin()) {
+            abort(403, 'Unauthorized. Admin access required.');
         }
 
         return $next($request);
