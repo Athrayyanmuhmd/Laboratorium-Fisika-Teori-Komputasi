@@ -8,6 +8,7 @@ use App\Models\Gallery;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class LaboratoryController extends Controller
 {

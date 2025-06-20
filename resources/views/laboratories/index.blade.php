@@ -3275,31 +3275,65 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                @for ($i = 0; $i < 5; $i++)
+                @forelse ($featuredStaff as $staff)
                     <div class="staff-card group">
                         <div class="staff-avatar-container">
                             <div class="staff-avatar">
-                                <i class="fas fa-user text-3xl text-slate-500 group-hover:text-white transition-colors duration-300"></i>
+                                @if($staff->photo_path)
+                                    <img src="{{ Storage::url($staff->photo_path) }}" alt="{{ $staff->name }}" 
+                                         class="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300">
+                                @else
+                                    <i class="fas fa-user text-3xl text-slate-500 group-hover:text-white transition-colors duration-300"></i>
+                                @endif
                             </div>
                             <div class="staff-status-indicator"></div>
                         </div>
                         <div class="staff-info">
-                            <h3 class="staff-name">Dr. Mustapa, M.Si</h3>
-                            <p class="staff-position">Dosen & Peneliti</p>
-                            <p class="staff-specialization">Computational Physics</p>
+                            <h3 class="staff-name">{{ $staff->name }}</h3>
+                            <p class="staff-position">{{ $staff->position }}</p>
+                            <p class="staff-specialization">{{ $staff->specialization ?? 'Computational Physics' }}</p>
                         </div>
                         <div class="staff-contact-overlay">
                             <div class="staff-contact-buttons">
-                                <button class="staff-contact-btn email-btn" title="Email">
-                                    <i class="fas fa-envelope"></i>
-                                </button>
+                                @if($staff->email)
+                                    <a href="mailto:{{ $staff->email }}" class="staff-contact-btn email-btn" title="Email">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                @endif
                                 <button class="staff-contact-btn profile-btn" title="Profile">
                                     <i class="fas fa-user-circle"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-                @endfor
+                @empty
+                    <!-- Default placeholder if no staff -->
+                    @for ($i = 0; $i < 5; $i++)
+                        <div class="staff-card group">
+                            <div class="staff-avatar-container">
+                                <div class="staff-avatar">
+                                    <i class="fas fa-user text-3xl text-slate-500 group-hover:text-white transition-colors duration-300"></i>
+                                </div>
+                                <div class="staff-status-indicator"></div>
+                            </div>
+                            <div class="staff-info">
+                                <h3 class="staff-name">Dr. Mustapa, M.Si</h3>
+                                <p class="staff-position">Dosen & Peneliti</p>
+                                <p class="staff-specialization">Computational Physics</p>
+                            </div>
+                            <div class="staff-contact-overlay">
+                                <div class="staff-contact-buttons">
+                                    <button class="staff-contact-btn email-btn" title="Email">
+                                        <i class="fas fa-envelope"></i>
+                                    </button>
+                                    <button class="staff-contact-btn profile-btn" title="Profile">
+                                        <i class="fas fa-user-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endfor
+                @endforelse
             </div>
         </div>
     </section>
@@ -3316,85 +3350,104 @@
             
             <!-- Gallery Masonry Layout -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Main Lab Room -->
-                <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                    <div class="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
-                        <img src="{{ asset('images/logo-fisika-putih.png') }}" alt="Lab Room" class="w-full h-full object-cover opacity-30">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-800/50 flex items-end">
-                            <div class="p-6 text-white">
-                                <h3 class="text-xl font-bold mb-2">Ruang Utama Lab</h3>
-                                <p class="text-sm opacity-90">28 PC Workstation untuk komputasi dan simulasi fisika</p>
+                @forelse ($featuredGallery as $gallery)
+                    <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        <div class="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
+                            @if($gallery->image_path)
+                                <img src="{{ Storage::url($gallery->image_path) }}" alt="{{ $gallery->title }}" class="w-full h-full object-cover">
+                            @else
+                                <img src="{{ asset('images/logo-fisika-putih.png') }}" alt="{{ $gallery->title }}" class="w-full h-full object-cover opacity-30">
+                            @endif
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-800/50 flex items-end">
+                                <div class="p-6 text-white">
+                                    <h3 class="text-xl font-bold mb-2">{{ $gallery->title }}</h3>
+                                    <p class="text-sm opacity-90">{{ $gallery->description ?? 'Fasilitas laboratorium fisika komputasi' }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Computer Setup -->
-                <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                    <div class="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-center">
-                                <i class="fas fa-desktop text-slate-600 text-6xl mb-4"></i>
-                                <h3 class="text-lg font-bold text-slate-800">PC Workstations</h3>
-                                <p class="text-sm text-gray-600">High-Performance Computing</p>
+                @empty
+                    <!-- Default placeholder if no gallery -->
+                    <!-- Main Lab Room -->
+                    <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        <div class="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 relative overflow-hidden">
+                            <img src="{{ asset('images/logo-fisika-putih.png') }}" alt="Lab Room" class="w-full h-full object-cover opacity-30">
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-800/50 flex items-end">
+                                <div class="p-6 text-white">
+                                    <h3 class="text-xl font-bold mb-2">Ruang Utama Lab</h3>
+                                    <p class="text-sm opacity-90">28 PC Workstation untuk komputasi dan simulasi fisika</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Photography Studio -->
-                <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                    <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-center">
-                                <i class="fas fa-camera text-slate-600 text-5xl mb-3"></i>
-                                <h3 class="text-lg font-bold text-slate-800">Studio Fotografi</h3>
-                                <p class="text-sm text-gray-600">Digital Photography & Editing</p>
+                    
+                    <!-- Computer Setup -->
+                    <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        <div class="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-desktop text-slate-600 text-6xl mb-4"></i>
+                                    <h3 class="text-lg font-bold text-slate-800">PC Workstations</h3>
+                                    <p class="text-sm text-gray-600">High-Performance Computing</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Software Development Area -->
-                <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                    <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-center">
-                                <i class="fas fa-code text-slate-600 text-5xl mb-3"></i>
-                                <h3 class="text-lg font-bold text-slate-800">Web Development</h3>
-                                <p class="text-sm text-gray-600">Programming & Design Hub</p>
+                    
+                    <!-- Photography Studio -->
+                    <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-camera text-slate-600 text-5xl mb-3"></i>
+                                    <h3 class="text-lg font-bold text-slate-800">Studio Fotografi</h3>
+                                    <p class="text-sm text-gray-600">Digital Photography & Editing</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Geophysics Software -->
-                <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                    <div class="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-center">
-                                <i class="fas fa-globe-americas text-slate-600 text-6xl mb-4"></i>
-                                <h3 class="text-lg font-bold text-slate-800">Software Geofisika</h3>
-                                <p class="text-sm text-gray-600">Earth Science Analysis</p>
+                    
+                    <!-- Software Development Area -->
+                    <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        <div class="aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-code text-slate-600 text-5xl mb-3"></i>
+                                    <h3 class="text-lg font-bold text-slate-800">Web Development</h3>
+                                    <p class="text-sm text-gray-600">Programming & Design Hub</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Simulation Lab -->
-                <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                    <div class="aspect-video bg-gradient-to-br from-slate-50 to-slate-200 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-800/50 flex items-end">
-                            <div class="p-6 text-white">
-                                <h3 class="text-xl font-bold mb-2">Area Simulasi</h3>
-                                <p class="text-sm opacity-90">Computational Physics & Numerical Modeling</p>
+                    
+                    <!-- Geophysics Software -->
+                    <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        <div class="aspect-square bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-globe-americas text-slate-600 text-6xl mb-4"></i>
+                                    <h3 class="text-lg font-bold text-slate-800">Software Geofisika</h3>
+                                    <p class="text-sm text-gray-600">Earth Science Analysis</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="absolute top-4 right-4">
-                            <i class="fas fa-atom text-white text-3xl opacity-80"></i>
+                    </div>
+                    
+                    <!-- Simulation Lab -->
+                    <div class="glass-luxury border border-slate-100 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                        <div class="aspect-video bg-gradient-to-br from-slate-50 to-slate-200 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-800/50 flex items-end">
+                                <div class="p-6 text-white">
+                                    <h3 class="text-xl font-bold mb-2">Area Simulasi</h3>
+                                    <p class="text-sm opacity-90">Computational Physics & Numerical Modeling</p>
+                                </div>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <i class="fas fa-atom text-white text-3xl opacity-80"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>

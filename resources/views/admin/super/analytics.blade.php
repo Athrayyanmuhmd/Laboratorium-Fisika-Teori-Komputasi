@@ -372,3 +372,4 @@ new Chart(monthlyCtx, {
 </script>
 @endpush
 @endsection
+ 

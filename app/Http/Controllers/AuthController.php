@@ -37,7 +37,7 @@ class AuthController extends Controller
                 'is_admin_result' => $user->isAdmin(),
                 'is_super_admin' => $user->isSuperAdmin()
             ]);
-            
+
             // Route based on user role
             if ($user->isSuperAdmin()) {
                 \Log::info('Redirecting to super admin dashboard');
