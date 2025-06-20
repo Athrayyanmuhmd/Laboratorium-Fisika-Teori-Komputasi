@@ -23,7 +23,7 @@
                         <span>Add Image</span>
                     </a>
                     <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg">
-                        <span class="text-sm font-medium">Total: {{ $gallery->count() }} Images</span>
+                        <span class="text-sm font-medium">Total: {{ $statistics['total'] }} Images</span>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Images</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-2">{{ $gallery->count() }}</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-2">{{ $statistics['total'] }}</p>
                     </div>
                     <div class="bg-blue-100 p-3 rounded-xl">
                         <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,9 +46,9 @@
                 </div>
                 <div class="mt-4">
                     <div class="flex items-center text-sm">
-                        <span class="text-green-600 font-medium">{{ $gallery->where('is_active', true)->count() }} Published</span>
+                        <span class="text-green-600 font-medium">{{ $statistics['active'] }} Published</span>
                         <span class="text-gray-400 mx-2">•</span>
-                        <span class="text-amber-600 font-medium">{{ $gallery->where('is_active', false)->count() }} Draft</span>
+                        <span class="text-amber-600 font-medium">{{ $statistics['total'] - $statistics['active'] }} Draft</span>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Categories</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-2">{{ $gallery->pluck('category')->unique()->count() }}</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-2">{{ count($statistics['by_category']) }}</p>
                     </div>
                     <div class="bg-green-100 p-3 rounded-xl">
                         <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +68,11 @@
                 </div>
                 <div class="mt-4">
                     <div class="text-sm text-gray-600">
-                        Laboratory, Equipment, Activities
+                        @if(count($statistics['by_category']) > 0)
+                            {{ ucfirst(implode(', ', array_keys($statistics['by_category']))) }}
+                        @else
+                            Equipment, Facility, Activity
+                        @endif
                     </div>
                 </div>
             </div>
@@ -78,7 +82,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Featured</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-2">{{ $gallery->where('is_featured', true)->count() }}</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-2">{{ $statistics['featured'] }}</p>
                     </div>
                     <div class="bg-purple-100 p-3 rounded-xl">
                         <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,7 +103,7 @@
                     <div>
                         <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Storage</p>
                         <p class="text-3xl font-bold text-gray-800 mt-2">
-                            {{ number_format($gallery->count() * 2.5, 1) }} MB
+                            {{ number_format($statistics['total'] * 2.5, 1) }} MB
                         </p>
                     </div>
                     <div class="bg-amber-100 p-3 rounded-xl">
@@ -173,10 +177,10 @@
                 </div>
             </div>
             
-            @if($gallery->count() > 0)
+            @if($galleries->count() > 0)
                 <!-- Grid View -->
                 <div id="grid-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    @foreach($gallery as $image)
+                    @foreach($galleries as $image)
                     <div class="group relative bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200">
                         <!-- Image Container -->
                         <div class="relative aspect-video bg-gray-100 overflow-hidden">
@@ -250,7 +254,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($gallery as $image)
+                                @foreach($galleries as $image)
                                 <tr class="hover:bg-gray-50 transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center space-x-4">
@@ -308,7 +312,7 @@
                 </div>
                 
                 <div class="mt-6">
-                    {{ $gallery->links() }}
+                    {{ $galleries->links() }}
                 </div>
             @else
                 <div class="text-center py-12">
