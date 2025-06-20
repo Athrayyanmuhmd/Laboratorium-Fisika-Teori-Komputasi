@@ -21,7 +21,7 @@ class StaffSeeder extends Seeder
                 'laboratory_id' => $laboratoryId,
                 'name' => 'Dr. Ahmad Mustafa, M.Si',
                 'position' => 'Dosen & Peneliti Senior',
-                'email' => 'ahmad.mustafa@unsyiah.ac.id',
+                'email' => 'ahmad.mustafa.staff@unsyiah.ac.id',
                 'phone' => '+62 651 123456',
                 'specialization' => 'Computational Physics, Quantum Mechanics',
                 'education' => 'Ph.D in Physics, Institut Teknologi Bandung',
@@ -34,7 +34,7 @@ class StaffSeeder extends Seeder
                 'laboratory_id' => $laboratoryId,
                 'name' => 'Dr. Sarah Lestari, M.Kom',
                 'position' => 'Dosen & Web Developer',
-                'email' => 'sarah.lestari@unsyiah.ac.id',
+                'email' => 'sarah.lestari.staff@unsyiah.ac.id',
                 'phone' => '+62 651 123457',
                 'specialization' => 'Web Development, Database Systems',
                 'education' => 'Ph.D in Computer Science, Universitas Indonesia',
@@ -47,7 +47,7 @@ class StaffSeeder extends Seeder
                 'laboratory_id' => $laboratoryId,
                 'name' => 'Prof. Dr. Bakhtiar Rahman, M.Eng',
                 'position' => 'Profesor & Kepala Lab',
-                'email' => 'bakhtiar.rahman@unsyiah.ac.id',
+                'email' => 'bakhtiar.rahman.staff@unsyiah.ac.id',
                 'phone' => '+62 651 123458',
                 'specialization' => 'Geophysics, Data Analysis',
                 'education' => 'Ph.D in Engineering Physics, Tokyo University',
@@ -60,7 +60,7 @@ class StaffSeeder extends Seeder
                 'laboratory_id' => $laboratoryId,
                 'name' => 'Dr. Rizki Wahyudi, M.T',
                 'position' => 'Dosen & System Administrator',
-                'email' => 'rizki.wahyudi@unsyiah.ac.id',
+                'email' => 'rizki.wahyudi.staff@unsyiah.ac.id',
                 'phone' => '+62 651 123459',
                 'specialization' => 'Network Systems, Linux Administration',
                 'education' => 'Ph.D in Information Technology, Universitas Gadjah Mada',
@@ -73,7 +73,7 @@ class StaffSeeder extends Seeder
                 'laboratory_id' => $laboratoryId,
                 'name' => 'Dra. Mariana Sari, M.Pd',
                 'position' => 'Dosen & Education Specialist',
-                'email' => 'mariana.sari@unsyiah.ac.id',
+                'email' => 'mariana.sari.staff@unsyiah.ac.id',
                 'phone' => '+62 651 123460',
                 'specialization' => 'Physics Education, E-Learning',
                 'education' => 'Master in Physics Education, Universitas Negeri Jakarta',
@@ -86,7 +86,7 @@ class StaffSeeder extends Seeder
                 'laboratory_id' => $laboratoryId,
                 'name' => 'Muhammad Farid, S.Kom',
                 'position' => 'Technical Staff',
-                'email' => 'muhammad.farid@unsyiah.ac.id',
+                'email' => 'muhammad.farid.staff@unsyiah.ac.id',
                 'phone' => '+62 651 123461',
                 'specialization' => 'Hardware Maintenance, Technical Support',
                 'education' => 'Bachelor in Computer Science, Universitas Syiah Kuala',
@@ -98,7 +98,10 @@ class StaffSeeder extends Seeder
         ];
 
         foreach ($staffMembers as $staff) {
-            Staff::create($staff);
+            Staff::updateOrCreate(
+                ['email' => $staff['email']],
+                $staff
+            );
         }
     }
 }
