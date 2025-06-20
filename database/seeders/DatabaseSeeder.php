@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             LaboratorySeeder::class,
             EquipmentSeeder::class,
             ComputerSeeder::class,
+            StaffSeeder::class,
+            GallerySeeder::class,
         ]);
     }
 }

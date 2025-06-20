@@ -9,25 +9,53 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            @for ($i = 0; $i < 5; $i++)
+            @forelse ($featuredStaff as $staff)
                 <div class="staff-card group">
                     <div class="staff-avatar-container">
                         <div class="staff-avatar">
-                            <i class="fas fa-user text-3xl text-slate-500 group-hover:text-white transition-colors duration-300"></i>
+                            @if($staff->photo)
+                                <img src="{{ Storage::url($staff->photo) }}" alt="{{ $staff->name }}" 
+                                     class="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300">
+                            @else
+                                <i class="fas fa-user text-3xl text-slate-500 group-hover:text-white transition-colors duration-300"></i>
+                            @endif
                         </div>
                         <div class="staff-ring"></div>
                     </div>
                     <div class="staff-info">
-                        <h3 class="staff-name">Dr. Staff {{ $i + 1 }}</h3>
-                        <p class="staff-title">Computational Physics</p>
+                        <h3 class="staff-name">{{ $staff->name }}</h3>
+                        <p class="staff-title">{{ $staff->position }}</p>
+                        <p class="text-sm text-slate-600 mb-2">{{ $staff->specialization }}</p>
                         <div class="staff-contact">
-                            <a href="mailto:staff{{ $i + 1 }}@unsyiah.ac.id" class="staff-email">
+                            <a href="mailto:{{ $staff->email }}" class="staff-email">
                                 <i class="fas fa-envelope"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-            @endfor
+            @empty
+                <!-- Default placeholder if no staff -->
+                @for ($i = 0; $i < 5; $i++)
+                    <div class="staff-card group">
+                        <div class="staff-avatar-container">
+                            <div class="staff-avatar">
+                                <i class="fas fa-user text-3xl text-slate-500 group-hover:text-white transition-colors duration-300"></i>
+                            </div>
+                            <div class="staff-ring"></div>
+                        </div>
+                        <div class="staff-info">
+                            <h3 class="staff-name">Dr. Mustapa, M.Si</h3>
+                            <p class="staff-title">Dosen & Peneliti</p>
+                            <p class="text-sm text-slate-600 mb-2">Computational Physics</p>
+                            <div class="staff-contact">
+                                <a href="mailto:staff{{ $i + 1 }}@unsyiah.ac.id" class="staff-email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endfor
+            @endforelse
         </div>
     </div>
 </section> 

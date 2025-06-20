@@ -79,10 +79,12 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'super_a
     // Staff Management
     Route::resource('staff', SuperAdminStaffController::class);
     Route::patch('staff/{staff}/toggle-status', [SuperAdminStaffController::class, 'toggleStatus'])->name('staff.toggle-status');
+    Route::patch('staff/{staff}/toggle-featured', [SuperAdminStaffController::class, 'toggleFeatured'])->name('staff.toggle-featured');
     
     // Gallery Management
     Route::resource('gallery', SuperAdminGalleryController::class);
     Route::patch('gallery/{gallery}/toggle-status', [SuperAdminGalleryController::class, 'toggleStatus'])->name('gallery.toggle-status');
+    Route::patch('gallery/{gallery}/toggle-featured', [SuperAdminGalleryController::class, 'toggleFeatured'])->name('gallery.toggle-featured');
     
     // System Analytics & Reports
     Route::get('/analytics', [SuperAdminDashboardController::class, 'analytics'])->name('analytics');
