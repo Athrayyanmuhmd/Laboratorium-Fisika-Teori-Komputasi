@@ -7,12 +7,16 @@ use App\Http\Controllers\VisitController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\SuperAdminDashboardController;
 use App\Http\Controllers\Admin\AdminLaboratoryController;
 use App\Http\Controllers\Admin\AdminEquipmentController;
 use App\Http\Controllers\Admin\AdminRentalController;
 use App\Http\Controllers\Admin\AdminVisitController;
 use App\Http\Controllers\Admin\AdminTestController;
 use App\Http\Controllers\Admin\AdminComputerController;
+use App\Http\Controllers\Admin\SuperAdminUserController;
+use App\Http\Controllers\Admin\SuperAdminStaffController;
+use App\Http\Controllers\Admin\SuperAdminGalleryController;
 
 // Main Single Page Application
 Route::get('/', [LaboratoryController::class, 'index'])->name('home');
@@ -62,6 +66,29 @@ Route::prefix('konsultasi')->name('consultation.')->group(function () {
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Super Admin Routes (Protected)
+Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'super_admin'])->group(function () {
+    Route::get('/', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+    
+    // User Management
+    Route::resource('users', SuperAdminUserController::class);
+    Route::patch('users/{user}/toggle-status', [SuperAdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::patch('users/{user}/change-role', [SuperAdminUserController::class, 'changeRole'])->name('users.change-role');
+    
+    // Staff Management
+    Route::resource('staff', SuperAdminStaffController::class);
+    Route::patch('staff/{staff}/toggle-status', [SuperAdminStaffController::class, 'toggleStatus'])->name('staff.toggle-status');
+    
+    // Gallery Management
+    Route::resource('gallery', SuperAdminGalleryController::class);
+    Route::patch('gallery/{gallery}/toggle-status', [SuperAdminGalleryController::class, 'toggleStatus'])->name('gallery.toggle-status');
+    
+    // System Analytics & Reports
+    Route::get('/analytics', [SuperAdminDashboardController::class, 'analytics'])->name('analytics');
+    Route::get('/reports', [SuperAdminDashboardController::class, 'reports'])->name('reports');
+    Route::get('/system-logs', [SuperAdminDashboardController::class, 'systemLogs'])->name('system-logs');
+});
 
 // Admin Routes (Protected)
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {

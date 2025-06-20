@@ -34,12 +34,22 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
-                'is_admin_result' => $user->isAdmin()
+                'is_admin_result' => $user->isAdmin(),
+                'is_super_admin' => $user->isSuperAdmin()
             ]);
             
-            // TEMPORARY: Force redirect all users to admin dashboard for testing
-            \Log::info('Forcing redirect to admin.dashboard for testing');
-            return redirect()->route('admin.dashboard')->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+            // Route based on user role
+            if ($user->isSuperAdmin()) {
+                \Log::info('Redirecting to super admin dashboard');
+                return redirect()->route('super-admin.dashboard')->with('success', 'Selamat datang kembali, Super Admin ' . $user->name . '!');
+            } elseif ($user->isAdmin()) {
+                \Log::info('Redirecting to regular admin dashboard');
+                return redirect()->route('admin.dashboard')->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+            } else {
+                // For non-admin users, redirect to home page
+                \Log::info('Redirecting non-admin user to home page');
+                return redirect()->route('home')->with('success', 'Selamat datang, ' . $user->name . '!');
+            }
         }
 
         return back()->withErrors([

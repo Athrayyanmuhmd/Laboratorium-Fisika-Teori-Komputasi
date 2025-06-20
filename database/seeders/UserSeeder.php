@@ -76,7 +76,21 @@ class UserSeeder extends Seeder
             'is_active' => true
         ]);
 
-        // 🔑 AKTOR 2: DOSEN/PENELITI 
+        // 🔑 AKTOR 2: LAB ADMIN 
+        // Email: labadmin@fisika.unsyiah.ac.id | Password: labadmin2024
+        User::create([
+            'name' => 'Dr. Ahmad Syafii, M.Si.',
+            'email' => 'labadmin@fisika.unsyiah.ac.id',
+            'password' => Hash::make('labadmin2024'),
+            'role' => 'lab_admin',
+            'laboratory_id' => $lab->id,
+            'phone' => '0651-7551235',
+            'position' => 'Administrator Laboratorium',
+            'bio' => 'Administrator laboratorium yang bertanggung jawab atas operasional harian lab, maintenance peralatan, dan bantuan teknis untuk pengguna.',
+            'is_active' => true
+        ]);
+
+        // 🔑 AKTOR 3: DOSEN/PENELITI 
         // Email: dosen@fisika.unsyiah.ac.id | Password: dosen2024
         User::create([
             'name' => 'Prof. Dr. Siti Aminah, M.Si.',
@@ -84,15 +98,16 @@ class UserSeeder extends Seeder
             'password' => Hash::make('dosen2024'),
             'role' => 'staff',
             'laboratory_id' => $lab->id,
-            'phone' => '0651-7551235',
+            'phone' => '0651-7551236',
             'position' => 'Dosen Senior Fisika Teori',
             'bio' => 'Dosen senior dan peneliti utama di bidang fisika teori dan komputasi. Aktif melakukan konsultasi dan penelitian menggunakan fasilitas laboratorium.',
             'is_active' => true
         ]);
 
         $this->command->info('✅ Demo users created successfully!');
-        $this->command->info('🔑 AKTOR 1 - Admin Lab: admin@fisika.unsyiah.ac.id / admin2024');
-        $this->command->info('🔑 AKTOR 2 - Dosen: dosen@fisika.unsyiah.ac.id / dosen2024');
+        $this->command->info('👑 SUPER ADMIN: admin@fisika.unsyiah.ac.id / admin2024 (Full System Access)');
+        $this->command->info('🔧 LAB ADMIN: labadmin@fisika.unsyiah.ac.id / labadmin2024 (Lab Operations Only)');
+        $this->command->info('👨‍🏫 DOSEN: dosen@fisika.unsyiah.ac.id / dosen2024 (Limited Access)');
         $this->command->info('📍 Laboratory: ' . $lab->name);
     }
 }

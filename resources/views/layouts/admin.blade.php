@@ -509,11 +509,23 @@
             <div class="flex items-center justify-center h-20 glass-effect">
                 <div class="flex items-center">
                     <div class="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center mr-3 backdrop-blur-lg">
-                                                    <img src="{{ asset('images/logo-fisika-putih.png') }}" alt="Logo" class="h-8 w-8 object-contain">
+                        <img src="{{ asset('images/logo-fisika-putih.png') }}" alt="Logo" class="h-8 w-8 object-contain">
                     </div>
                     <div>
-                        <span class="text-white text-lg font-bold">Admin Panel</span>
-                        <div class="text-blue-300 text-xs">Lab Fisika FMIPA</div>
+                        <span class="text-white text-lg font-bold">
+                            @if(Auth::user()->isSuperAdmin())
+                                Super Admin
+                            @else
+                                Lab Admin
+                            @endif
+                        </span>
+                        <div class="text-blue-300 text-xs">
+                            @if(Auth::user()->isSuperAdmin())
+                                Full System Access
+                            @else
+                                Lab Operations Only
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -563,17 +575,39 @@
                         <span class="font-medium">Konsultasi</span>
                     </a>
                     
-                    <!-- Section Divider -->
-                    <div class="section-divider"></div>
-                    <div class="px-4 py-2 text-blue-300 text-xs font-semibold uppercase tracking-wider">
-                        Sistem
-                    </div>
+                    @unless(Auth::user()->isSuperAdmin())
+                        <!-- Limited Access Notice -->
+                        <div class="mx-4 my-4 p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                            <div class="flex items-center text-yellow-300 text-xs">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <span class="font-medium">Lab Operations Access Only</span>
+                            </div>
+                            <div class="text-yellow-200 text-xs mt-1">
+                                Contact Super Admin for full access
+                            </div>
+                        </div>
+                    @endunless
                     
-                    <a href="#" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all">
-                        <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400"></i>
-                        <span class="font-medium">Pengaturan</span>
-                    </a>
+                    @if(Auth::user()->isSuperAdmin())
+                        <!-- Section Divider -->
+                        <div class="section-divider"></div>
+                        <div class="px-4 py-2 text-blue-300 text-xs font-semibold uppercase tracking-wider">
+                            Sistem
+                        </div>
+                        
+                        <a href="#" 
+                           class="nav-link flex items-center px-4 py-3 text-white transition-all">
+                            <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400"></i>
+                            <span class="font-medium">Pengaturan</span>
+                        </a>
+                        
+                        <!-- Super Admin Panel Link -->
+                        <a href="{{ route('super-admin.dashboard') }}" 
+                           class="nav-link flex items-center px-4 py-3 text-white transition-all bg-purple-500/20 border border-purple-400/30 rounded-lg mx-4 mt-3">
+                            <i class="fas fa-crown w-5 h-5 mr-3 text-purple-300"></i>
+                            <span class="font-medium">Super Admin Panel</span>
+                        </a>
+                    @endif
                 </div>
             </nav>
             

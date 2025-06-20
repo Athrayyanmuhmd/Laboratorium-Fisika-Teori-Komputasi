@@ -8,12 +8,29 @@
     <!-- Header Section with Greeting -->
     <div class="flex items-center justify-between mb-8">
         <div>
+            <div class="flex items-center space-x-3 mb-3">
+                <div class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    <i class="fas fa-user-cog mr-1"></i>
+                    {{ ucfirst(str_replace('_', ' ', Auth::user()->role)) }}
+                </div>
+                @if(Auth::user()->role !== 'super_admin')
+                    <div class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">
+                        Lab Operations Only
+                    </div>
+                @endif
+            </div>
             <h1 class="text-3xl font-bold text-gray-900 mb-2">
                 Selamat datang, {{ Auth::user()->name }}! 👋
             </h1>
             <p class="text-gray-600">Laboratorium Fisika Teori dan Komputasi - Dashboard Monitoring</p>
         </div>
         <div class="flex items-center space-x-4">
+            @if(Auth::user()->isSuperAdmin())
+                <a href="{{ route('super-admin.dashboard') }}" 
+                   class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all">
+                    <i class="fas fa-crown mr-2"></i>Super Admin Panel
+                </a>
+            @endif
             <div class="bg-white rounded-xl p-4 shadow-sm">
                 <div class="text-sm text-gray-500">Waktu Real-time</div>
                 <div class="text-lg font-semibold text-gray-900" id="current-time"></div>
