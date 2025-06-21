@@ -579,6 +579,30 @@
                         <span class="font-medium">Konsultasi</span>
                     </a>
                     
+                    <!-- Section Divider -->
+                    <div class="section-divider"></div>
+                    <div class="px-4 py-2 text-blue-300 text-xs font-semibold uppercase tracking-wider">
+                        Layanan Fisika Teori & Komputasi
+                    </div>
+                    
+                    <a href="{{ route('admin.workstations.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.workstations.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-desktop w-5 h-5 mr-3 text-cyan-400"></i>
+                        <span class="font-medium">Penyewaan Workstation</span>
+                    </a>
+                    
+                    <a href="{{ route('admin.lab-visits.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.lab-visits.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-users w-5 h-5 mr-3 text-emerald-400"></i>
+                        <span class="font-medium">Kunjungan Lab</span>
+                    </a>
+                    
+                    <a href="{{ route('admin.analysis-requests.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.analysis-requests.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-chart-line w-5 h-5 mr-3 text-violet-400"></i>
+                        <span class="font-medium">Analisis & Simulasi</span>
+                    </a>
+                    
                     @unless(Auth::user()->isSuperAdmin())
                         <!-- Limited Access Notice -->
                         <div class="mx-4 my-4 p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Laboratorium Fisika Komputasi - FMIPA Universitas Syiah Kuala</title>
     
     <!-- Tailwind CSS -->
@@ -15,6 +16,9 @@
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Notification Script -->
+    <script src="{{ asset('js/notifications.js') }}"></script>
     
     <style>
         * {
@@ -3800,10 +3804,10 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Workstation/Alat yang Disewa</label>
                                 <select name="equipment" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-300">
                                     <option value="">Pilih Workstation/Alat</option>
-                                    <option value="workstation">PC High-Performance Workstation</option>
-                                    <option value="software">Software License Spesialis</option>
-                                    <option value="combo">Workstation + Software Package</option>
-                                    <option value="instrument">Instrumentasi Penelitian</option>
+                                    <option value="pc_high_performance">PC High-Performance Workstation</option>
+                                    <option value="software_geofisika">Software License Spesialis</option>
+                                    <option value="tools_fotografi">Workstation + Software Package</option>
+                                    <option value="environment_programming">Instrumentasi Penelitian</option>
                                 </select>
                             </div>
                             
@@ -3864,10 +3868,10 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kunjungan</label>
                                 <select name="visit_type" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-300">
                                     <option value="">Pilih Jenis</option>
-                                    <option value="educational">Kunjungan Edukatif</option>
-                                    <option value="research">Kunjungan Riset</option>
-                                    <option value="industrial">Kunjungan Industri</option>
-                                    <option value="collaboration">Kunjungan Kerjasama</option>
+                                    <option value="tur_fasilitas">Kunjungan Edukatif</option>
+                                    <option value="workshop_simulasi">Kunjungan Riset</option>
+                                    <option value="demo_software">Kunjungan Industri</option>
+                                    <option value="konsultasi_ahli">Kunjungan Kerjasama</option>
                                 </select>
                             </div>
                             
@@ -3928,10 +3932,10 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Analisis</label>
                                 <select name="test_type" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-300">
                                     <option value="">Pilih Jenis</option>
-                                    <option value="simulation">Simulasi Numerik & Pemodelan</option>
-                                    <option value="data_analysis">Analisis Data Geofisika</option>
-                                    <option value="modeling">Mathematical Modeling</option>
-                                    <option value="computation">Computational Physics</option>
+                                    <option value="simulasi_numerik">Simulasi Numerik & Pemodelan</option>
+                                    <option value="analisis_data_geofisika">Analisis Data Geofisika</option>
+                                    <option value="visualisasi_data">Mathematical Modeling</option>
+                                    <option value="laporan_komprehensif">Computational Physics</option>
                                 </select>
                             </div>
                             
@@ -4273,7 +4277,7 @@
                 
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    <input type="password" id="password" name="password" required
+                    <input type="password" id="password" name="password" required autocomplete="current-password"
                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-300">
                 </div>
                 
@@ -4300,19 +4304,23 @@
         // Loading animation
         window.addEventListener('load', function() {
             const loadingBar = document.getElementById('loadingBar');
-            loadingBar.style.width = '100%';
-            setTimeout(() => {
-                loadingBar.style.opacity = '0';
-            }, 500);
+            if (loadingBar) {
+                loadingBar.style.width = '100%';
+                setTimeout(() => {
+                    loadingBar.style.opacity = '0';
+                }, 500);
+            }
         });
 
         // Navbar scroll effect
         window.addEventListener('scroll', function() {
             const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+            if (navbar) {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
             }
         });
 
@@ -4326,6 +4334,12 @@
                 if (this.hasFinished) return;
                 
                 const typingElement = document.getElementById('typing-text');
+                
+                // Check if element exists before manipulating it
+                if (!typingElement) {
+                    console.warn('typing-text element not found');
+                    return;
+                }
                 
                 if (this.currentCharIndex < this.text.length) {
                     typingElement.textContent = this.text.substring(0, this.currentCharIndex + 1);
@@ -4343,6 +4357,8 @@
             
             counters.forEach(counter => {
                 const target = parseInt(counter.getAttribute('data-count'));
+                if (isNaN(target)) return; // Skip if target is not a valid number
+                
                 let count = 0;
                 const increment = target / 50;
                 
@@ -4383,8 +4399,11 @@
             const elementsToAnimate = document.querySelectorAll('.service-card, .facility-item, .hero-stats');
             elementsToAnimate.forEach(el => observer.observe(el));
             
-            // Start typing animation
-            setTimeout(() => typeWriter.type(), 1000);
+            // Start typing animation only if element exists
+            const typingElement = document.getElementById('typing-text');
+            if (typingElement) {
+                setTimeout(() => typeWriter.type(), 1000);
+            }
         });
 
         // Smooth scrolling for navigation links
@@ -4405,7 +4424,10 @@
 
         // Particle background effect
         function createParticles() {
-            const particleCount = 50;
+            // Only create particles if we're not on mobile to improve performance
+            if (window.innerWidth < 768) return;
+            
+            const particleCount = 30; // Reduced count for better performance
             const particles = [];
             
             for (let i = 0; i < particleCount; i++) {
@@ -4413,7 +4435,7 @@
                 particle.style.position = 'fixed';
                 particle.style.width = '2px';
                 particle.style.height = '2px';
-                particle.style.background = 'rgba(102, 126, 234, 0.5)';
+                particle.style.background = 'rgba(102, 126, 234, 0.3)'; // Reduced opacity
                 particle.style.borderRadius = '50%';
                 particle.style.pointerEvents = 'none';
                 particle.style.zIndex = '1';
@@ -4426,11 +4448,12 @@
                     element: particle,
                     x: Math.random() * window.innerWidth,
                     y: Math.random() * window.innerHeight,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5
+                    vx: (Math.random() - 0.5) * 0.3, // Reduced speed
+                    vy: (Math.random() - 0.5) * 0.3
                 });
             }
             
+            let animationId;
             function animateParticles() {
                 particles.forEach(particle => {
                     particle.x += particle.vx;
@@ -4443,44 +4466,194 @@
                     particle.element.style.top = particle.y + 'px';
                 });
                 
-                requestAnimationFrame(animateParticles);
+                animationId = requestAnimationFrame(animateParticles);
             }
             
             animateParticles();
+            
+            // Clean up on page unload
+            window.addEventListener('beforeunload', () => {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+                particles.forEach(particle => {
+                    if (particle.element && particle.element.parentNode) {
+                        particle.element.parentNode.removeChild(particle.element);
+                    }
+                });
+            });
         }
 
-        // Initialize particles on load
-        window.addEventListener('load', createParticles);
+        // Initialize particles on load with delay
+        window.addEventListener('load', () => {
+            setTimeout(createParticles, 1000);
+        });
         
         // Online Forms Handling
         function initOnlineForms() {
-            // Rental Form
+            // Rental Form (Workstation)
             const rentalForm = document.getElementById('rentalForm');
             if (rentalForm) {
-                rentalForm.addEventListener('submit', function(e) {
+                rentalForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-                    showSuccessNotification('Permohonan penyewaan alat berhasil dikirim! Tim kami akan menghubungi Anda dalam 1-2 hari kerja.');
-                    rentalForm.reset();
+                    
+                    const submitBtn = rentalForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        const formData = new FormData(rentalForm);
+                        
+                        // Map form fields to backend expected fields
+                        const data = {
+                            name: formData.get('name'),
+                            institution: formData.get('institution'),
+                            email: formData.get('email'),
+                            workstation_type: formData.get('equipment'), // map equipment to workstation_type
+                            start_date: formData.get('start_date'),
+                            end_date: formData.get('end_date'),
+                            research_purpose: formData.get('purpose')
+                        };
+                        
+                        console.log('Sending workstation data:', data);
+                        
+                        const response = await fetch('/workstation', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        console.log('Response status:', response.status);
+                        const result = await response.json();
+                        console.log('Response data:', result);
+                        
+                        if (result.success) {
+                            showSuccessNotification(result.message);
+                            rentalForm.reset();
+                        } else {
+                            showNotification(result.message || 'Terjadi kesalahan saat mengirim permohonan', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Workstation submission error:', error);
+                        showNotification('Terjadi kesalahan saat mengirim permohonan. Silakan coba lagi.', 'error');
+                    } finally {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
                 });
             }
             
-            // Visit Form
+            // Visit Form (Lab Visit)
             const visitForm = document.getElementById('visitForm');
             if (visitForm) {
-                visitForm.addEventListener('submit', function(e) {
+                visitForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-                    showSuccessNotification('Pengajuan kunjungan berhasil dikirim! Tim kami akan menghubungi Anda untuk koordinasi jadwal.');
-                    visitForm.reset();
+                    
+                    const submitBtn = visitForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        const formData = new FormData(visitForm);
+                        
+                        const data = {
+                            pic_name: formData.get('pic_name'),
+                            institution: formData.get('institution'),
+                            contact: formData.get('phone'), // map phone to contact
+                            visit_type: formData.get('visit_type'),
+                            visit_date: formData.get('visit_date'),
+                            participant_count: formData.get('participants'), // map participants to participant_count
+                            purpose_expectations: formData.get('objectives') // map objectives to purpose_expectations
+                        };
+                        
+                        console.log('Sending lab visit data:', data);
+                        
+                        const response = await fetch('/lab-visit', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        console.log('Lab visit response status:', response.status);
+                        const result = await response.json();
+                        console.log('Lab visit response data:', result);
+                        
+                        if (result.success) {
+                            showSuccessNotification(result.message);
+                            visitForm.reset();
+                        } else {
+                            showNotification(result.message || 'Terjadi kesalahan saat mengirim pengajuan', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Lab visit submission error:', error);
+                        showNotification('Terjadi kesalahan saat mengirim pengajuan. Silakan coba lagi.', 'error');
+                    } finally {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
                 });
             }
             
-            // Testing Form
+            // Testing Form (Analysis)
             const testingForm = document.getElementById('testingForm');
             if (testingForm) {
-                testingForm.addEventListener('submit', function(e) {
+                testingForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-                    showSuccessNotification('Request pengujian berhasil dikirim! Tim ahli kami akan menganalisis kebutuhan Anda.');
-                    testingForm.reset();
+                    
+                    const submitBtn = testingForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        const formData = new FormData(testingForm);
+                        
+                        const data = {
+                            researcher_name: formData.get('researcher_name'),
+                            affiliation: formData.get('affiliation'),
+                            email: formData.get('email'),
+                            analysis_type: formData.get('test_type'), // map test_type to analysis_type
+                            data_description: formData.get('sample_description'), // map sample_description to data_description
+                            analysis_parameters: formData.get('parameters'),
+                            target_deadline: formData.get('deadline')
+                        };
+                        
+                        console.log('Sending analysis data:', data);
+                        
+                        const response = await fetch('/analysis', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        console.log('Analysis response status:', response.status);
+                        const result = await response.json();
+                        console.log('Analysis response data:', result);
+                        
+                        if (result.success) {
+                            showSuccessNotification(result.message);
+                            testingForm.reset();
+                        } else {
+                            showNotification(result.message || 'Terjadi kesalahan saat mengirim request', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Analysis submission error:', error);
+                        showNotification('Terjadi kesalahan saat mengirim request. Silakan coba lagi.', 'error');
+                    } finally {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
                 });
             }
         }
@@ -4525,6 +4698,11 @@
             }
         }
         
+        // Success notification helper
+        function showSuccessNotification(message) {
+            showNotification(message, 'success');
+        }
+        
         // Notification System
         function showNotification(message, type = 'info') {
             // Remove existing notifications
@@ -4563,7 +4741,7 @@
             // Auto remove after 5 seconds
             setTimeout(() => {
                 notification.classList.add('translate-x-full');
-                setTimeout(() => notification.remove(), 500);
+                setTimeout(() => notification.remove(), 5000);
             }, 5000);
         }
         
@@ -5182,10 +5360,450 @@
                 }
             });
         }
+
+        // Modal Functions for New Services
+        function openWorkstationModal() {
+            document.getElementById('workstationModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeWorkstationModal() {
+            document.getElementById('workstationModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openLabVisitModal() {
+            document.getElementById('labVisitModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLabVisitModal() {
+            document.getElementById('labVisitModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openAnalysisModal() {
+            document.getElementById('analysisModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAnalysisModal() {
+            document.getElementById('analysisModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Form Submission Functions
+        function submitWorkstationForm(event) {
+            console.log('submitWorkstationForm called');
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            console.log('Form data:', Object.fromEntries(formData));
+
+            // Check if CSRF token exists
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (!csrfToken) {
+                console.error('CSRF token not found');
+                showErrorNotification('Token keamanan tidak ditemukan. Silakan refresh halaman.');
+                return;
+            }
+
+            fetch('/workstation', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                if (data.success) {
+                    showSuccessNotification(data.message);
+                    form.reset();
+                    closeWorkstationModal();
+                } else {
+                    showErrorNotification(data.message || 'Terjadi kesalahan saat mengirim formulir');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorNotification('Terjadi kesalahan saat mengirim formulir: ' + error.message);
+            });
+        }
+
+        function submitLabVisitForm(event) {
+            console.log('submitLabVisitForm called');
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            console.log('Form data:', Object.fromEntries(formData));
+
+            // Check if CSRF token exists
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (!csrfToken) {
+                console.error('CSRF token not found');
+                showErrorNotification('Token keamanan tidak ditemukan. Silakan refresh halaman.');
+                return;
+            }
+
+            fetch('/lab-visit', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                if (data.success) {
+                    showSuccessNotification(data.message);
+                    form.reset();
+                    closeLabVisitModal();
+                } else {
+                    showErrorNotification(data.message || 'Terjadi kesalahan saat mengirim formulir');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorNotification('Terjadi kesalahan saat mengirim formulir: ' + error.message);
+            });
+        }
+
+        function submitAnalysisForm(event) {
+            console.log('submitAnalysisForm called');
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            console.log('Form data:', Object.fromEntries(formData));
+
+            // Check if CSRF token exists
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (!csrfToken) {
+                console.error('CSRF token not found');
+                showErrorNotification('Token keamanan tidak ditemukan. Silakan refresh halaman.');
+                return;
+            }
+
+            fetch('/analysis', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                if (data.success) {
+                    showSuccessNotification(data.message);
+                    form.reset();
+                    closeAnalysisModal();
+                } else {
+                    showErrorNotification(data.message || 'Terjadi kesalahan saat mengirim formulir');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorNotification('Terjadi kesalahan saat mengirim formulir: ' + error.message);
+            });
+        }
+
+        // Notification Functions
+        function showSuccessNotification(message) {
+            // Create notification container if it doesn't exist
+            let container = document.getElementById('notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'notification-container';
+                container.className = 'fixed top-4 right-4 z-[9999] space-y-2';
+                document.body.appendChild(container);
+            }
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 transform translate-x-full transition-transform duration-300 ease-out min-w-[300px]';
+            notification.innerHTML = `
+                <div class="flex-shrink-0">
+                    <i class="fas fa-check-circle text-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="font-medium">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="flex-shrink-0 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            container.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        function showErrorNotification(message) {
+            // Create notification container if it doesn't exist
+            let container = document.getElementById('notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'notification-container';
+                container.className = 'fixed top-4 right-4 z-[9999] space-y-2';
+                document.body.appendChild(container);
+            }
+
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 transform translate-x-full transition-transform duration-300 ease-out min-w-[300px]';
+            notification.innerHTML = `
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="font-medium">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="flex-shrink-0 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            container.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+
+            // Auto remove after 7 seconds (longer for errors)
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.remove(), 300);
+            }, 7000);
+        }
     </script>
-    
-    <!-- Include Mobile Components -->
-    @include('laboratories.partials.mobile-components')
+
+    <!-- Workstation Rental Modal -->
+    <div id="workstationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-3xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Formulir Penyewaan Workstation</h3>
+                    <button onclick="closeWorkstationModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form onsubmit="submitWorkstationForm(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
+                            <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Nama lengkap">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Institusi/Universitas *</label>
+                            <input type="text" name="institution" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Nama institusi">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="email@example.com">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Workstation/Alat yang Disewa *</label>
+                        <select name="workstation_type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Pilih Workstation/Alat</option>
+                            <option value="pc_high_performance">PC High-Performance untuk Simulasi Fisika</option>
+                            <option value="software_geofisika">Software Geofisika dan Komputasi Terintegrasi</option>
+                            <option value="tools_fotografi">Tools Fotografi Digital dan Web Design</option>
+                            <option value="environment_programming">Environment Programming Terintegrasi</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai *</label>
+                            <input type="date" name="start_date" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Selesai *</label>
+                            <input type="date" name="end_date" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tujuan Penelitian *</label>
+                        <textarea name="research_purpose" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" placeholder="Jelaskan tujuan dan kebutuhan penelitian Anda..."></textarea>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" onclick="closeWorkstationModal()" class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">Batal</button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all">
+                            <i class="fas fa-paper-plane mr-2"></i>Kirim Permohonan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lab Visit Modal -->
+    <div id="labVisitModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-3xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Formulir Kunjungan Lab</h3>
+                    <button onclick="closeLabVisitModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form onsubmit="submitLabVisitForm(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama PIC *</label>
+                            <input type="text" name="pic_name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Nama penanggung jawab">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Institusi/Sekolah *</label>
+                            <input type="text" name="institution" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Nama institusi/sekolah">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kontak *</label>
+                        <input type="text" name="contact" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Email atau nomor telepon">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kunjungan *</label>
+                        <select name="visit_type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Pilih Jenis</option>
+                            <option value="tur_fasilitas">Tur Fasilitas 28 PC Workstation</option>
+                            <option value="workshop_simulasi">Workshop Simulasi dan Komputasi Fisika</option>
+                            <option value="demo_software">Demo Software Geofisika dan Visualisasi</option>
+                            <option value="konsultasi_ahli">Sesi Konsultasi dengan Tim Ahli</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Kunjungan *</label>
+                            <input type="date" name="visit_date" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Peserta *</label>
+                            <input type="number" name="participant_count" min="1" max="50" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Jumlah peserta">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tujuan & Ekspektasi *</label>
+                        <textarea name="purpose_expectations" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none" placeholder="Jelaskan tujuan kunjungan dan ekspektasi yang diharapkan..."></textarea>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" onclick="closeLabVisitModal()" class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">Batal</button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all">
+                            <i class="fas fa-calendar-alt mr-2"></i>Ajukan Kunjungan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Request Modal -->
+    <div id="analysisModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-3xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Formulir Analisis & Simulasi</h3>
+                    <button onclick="closeAnalysisModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form onsubmit="submitAnalysisForm(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Peneliti *</label>
+                            <input type="text" name="researcher_name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Nama peneliti">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Afiliasi *</label>
+                            <input type="text" name="affiliation" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Institusi/universitas">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="email@example.com">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Analisis *</label>
+                        <select name="analysis_type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="">Pilih Jenis</option>
+                            <option value="simulasi_numerik">Simulasi Numerik dan Pemodelan Fisika</option>
+                            <option value="analisis_data_geofisika">Analisis Data Geofisika dan Komputasi</option>
+                            <option value="visualisasi_data">Visualisasi Data dan Rendering Grafis</option>
+                            <option value="laporan_komprehensif">Laporan Analisis Komprehensif</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Data/Problem *</label>
+                        <textarea name="data_description" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none" placeholder="Jelaskan data yang akan dianalisis dan permasalahan yang ingin diselesaikan..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Parameter yang Dianalisis *</label>
+                        <textarea name="analysis_parameters" rows="3" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none" placeholder="Sebutkan parameter-parameter yang perlu dianalisis..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Target Deadline *</label>
+                        <input type="date" name="target_deadline" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" onclick="closeAnalysisModal()" class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">Batal</button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-lg hover:from-purple-600 hover:to-violet-700 transition-all">
+                            <i class="fas fa-microscope mr-2"></i>Request Analisis
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html> 
 

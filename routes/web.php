@@ -5,6 +5,9 @@ use App\Http\Controllers\LaboratoryController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\VisitController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\WorkstationController;
+use App\Http\Controllers\LabVisitController;
+use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SuperAdminDashboardController;
@@ -14,9 +17,13 @@ use App\Http\Controllers\Admin\AdminRentalController;
 use App\Http\Controllers\Admin\AdminVisitController;
 use App\Http\Controllers\Admin\AdminTestController;
 use App\Http\Controllers\Admin\AdminComputerController;
+use App\Http\Controllers\Admin\AdminWorkstationController;
+use App\Http\Controllers\Admin\AdminLabVisitController;
+use App\Http\Controllers\Admin\AdminAnalysisController;
 use App\Http\Controllers\Admin\SuperAdminUserController;
 use App\Http\Controllers\Admin\SuperAdminStaffController;
 use App\Http\Controllers\Admin\SuperAdminGalleryController;
+use Illuminate\Http\Request;
 
 // Main Single Page Application
 Route::get('/', [LaboratoryController::class, 'index'])->name('home');
@@ -60,6 +67,31 @@ Route::prefix('konsultasi')->name('consultation.')->group(function () {
     Route::get('/request', [TestController::class, 'create'])->name('create');
     Route::post('/', [TestController::class, 'store'])->name('store');
     Route::get('/track', [TestController::class, 'track'])->name('track');
+});
+
+// Layanan Penyewaan Workstation
+Route::prefix('workstation')->name('workstation.')->group(function () {
+    Route::post('/', function(Request $request) {
+        \Log::info('=== ROUTE WORKSTATION ACCESSED ===');
+        \Log::info('Method: ' . $request->method());
+        \Log::info('Data: ', $request->all());
+        
+        // Call the actual controller
+        return app(WorkstationController::class)->store($request);
+    })->name('store');
+    Route::get('/track', [WorkstationController::class, 'track'])->name('track');
+});
+
+// Layanan Kunjungan Lab
+Route::prefix('lab-visit')->name('lab-visit.')->group(function () {
+    Route::post('/', [LabVisitController::class, 'store'])->name('store');
+    Route::get('/track', [LabVisitController::class, 'track'])->name('track');
+});
+
+// Layanan Analisis & Simulasi
+Route::prefix('analysis')->name('analysis.')->group(function () {
+    Route::post('/', [AnalysisController::class, 'store'])->name('store');
+    Route::get('/track', [AnalysisController::class, 'track'])->name('track');
 });
 
 // Authentication Routes
@@ -125,6 +157,25 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::patch('consultations/{test}/reject', [AdminTestController::class, 'reject'])->name('consultations.reject');
     Route::patch('consultations/{test}/start', [AdminTestController::class, 'start'])->name('consultations.start');
     Route::patch('consultations/{test}/complete', [AdminTestController::class, 'complete'])->name('consultations.complete');
+    
+    // Workstation Management
+    Route::resource('workstations', AdminWorkstationController::class)->only(['index', 'show']);
+    Route::patch('workstations/{workstation}/approve', [AdminWorkstationController::class, 'approve'])->name('workstations.approve');
+    Route::patch('workstations/{workstation}/reject', [AdminWorkstationController::class, 'reject'])->name('workstations.reject');
+    Route::patch('workstations/{workstation}/complete', [AdminWorkstationController::class, 'complete'])->name('workstations.complete');
+    
+    // Lab Visit Management
+    Route::resource('lab-visits', AdminLabVisitController::class)->only(['index', 'show']);
+    Route::patch('lab-visits/{labVisit}/approve', [AdminLabVisitController::class, 'approve'])->name('lab-visits.approve');
+    Route::patch('lab-visits/{labVisit}/reject', [AdminLabVisitController::class, 'reject'])->name('lab-visits.reject');
+    Route::patch('lab-visits/{labVisit}/complete', [AdminLabVisitController::class, 'complete'])->name('lab-visits.complete');
+    
+    // Analysis Request Management
+    Route::resource('analysis-requests', AdminAnalysisController::class)->only(['index', 'show']);
+    Route::patch('analysis-requests/{analysis}/approve', [AdminAnalysisController::class, 'approve'])->name('analysis-requests.approve');
+    Route::patch('analysis-requests/{analysis}/reject', [AdminAnalysisController::class, 'reject'])->name('analysis-requests.reject');
+    Route::patch('analysis-requests/{analysis}/start', [AdminAnalysisController::class, 'startProgress'])->name('analysis-requests.start');
+    Route::patch('analysis-requests/{analysis}/complete', [AdminAnalysisController::class, 'complete'])->name('analysis-requests.complete');
 });
 
 // Legacy routes untuk kompatibilitas (redirect ke single page)
@@ -151,4 +202,24 @@ Route::get('/beranda', function () {
 
 Route::get('/home', function () {
     return redirect('/#beranda');
+});
+
+// Test route untuk debugging
+Route::post('/test-workstation', function(Request $request) {
+    \Log::info('Test workstation route called', $request->all());
+    return response()->json(['success' => true, 'message' => 'Test route works', 'data' => $request->all()]);
+});
+
+// Test route untuk form submission debugging
+Route::post('/debug-workstation', function(Request $request) {
+    \Log::info('=== DEBUG WORKSTATION ROUTE CALLED ===');
+    \Log::info('Method: ' . $request->method());
+    \Log::info('Headers: ', $request->headers->all());
+    \Log::info('Data: ', $request->all());
+    return response()->json([
+        'success' => true, 
+        'message' => 'Debug route reached successfully!',
+        'received_data' => $request->all(),
+        'method' => $request->method()
+    ]);
 });

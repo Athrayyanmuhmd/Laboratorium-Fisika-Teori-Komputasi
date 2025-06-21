@@ -9,6 +9,9 @@ use App\Models\Equipment;
 use App\Models\Rental;
 use App\Models\Visit;
 use App\Models\Test;
+use App\Models\WorkstationRental;
+use App\Models\LabVisit;
+use App\Models\AnalysisRequest;
 use App\Models\MaintenanceRecord;
 use App\Models\Computer;
 use Carbon\Carbon;
@@ -42,6 +45,22 @@ class DashboardController extends Controller
         $inProgressTests = Test::where('status', 'in_progress')->count();
         $completedTests = Test::where('status', 'completed')->count();
 
+        // New Services Statistics
+        $totalWorkstationRentals = WorkstationRental::count();
+        $pendingWorkstationRentals = WorkstationRental::where('status', 'pending')->count();
+        $approvedWorkstationRentals = WorkstationRental::where('status', 'approved')->count();
+        $completedWorkstationRentals = WorkstationRental::where('status', 'completed')->count();
+
+        $totalLabVisits = LabVisit::count();
+        $pendingLabVisits = LabVisit::where('status', 'pending')->count();
+        $approvedLabVisits = LabVisit::where('status', 'approved')->count();
+        $completedLabVisits = LabVisit::where('status', 'completed')->count();
+
+        $totalAnalysisRequests = AnalysisRequest::count();
+        $pendingAnalysisRequests = AnalysisRequest::where('status', 'pending')->count();
+        $inProgressAnalysisRequests = AnalysisRequest::where('status', 'in_progress')->count();
+        $completedAnalysisRequests = AnalysisRequest::where('status', 'completed')->count();
+
         // Recent Activities
         $recentRentals = Rental::with(['equipment', 'equipment.laboratory'])
             ->latest()
@@ -54,6 +73,22 @@ class DashboardController extends Controller
             ->get();
 
         $recentTests = Test::with('laboratory')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // Recent New Services Activities
+        $recentWorkstationRentals = WorkstationRental::with('approvedBy')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $recentLabVisits = LabVisit::with('approvedBy')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $recentAnalysisRequests = AnalysisRequest::with(['approvedBy', 'analyst'])
             ->latest()
             ->take(5)
             ->get();
@@ -115,9 +150,24 @@ class DashboardController extends Controller
             'pendingTests',
             'inProgressTests',
             'completedTests',
+            'totalWorkstationRentals',
+            'pendingWorkstationRentals',
+            'approvedWorkstationRentals',
+            'completedWorkstationRentals',
+            'totalLabVisits',
+            'pendingLabVisits',
+            'approvedLabVisits',
+            'completedLabVisits',
+            'totalAnalysisRequests',
+            'pendingAnalysisRequests',
+            'inProgressAnalysisRequests',
+            'completedAnalysisRequests',
             'recentRentals',
             'recentVisits',
             'recentTests',
+            'recentWorkstationRentals',
+            'recentLabVisits',
+            'recentAnalysisRequests',
             'upcomingMaintenance',
             'equipmentByCategory',
             'monthlyRentals',
