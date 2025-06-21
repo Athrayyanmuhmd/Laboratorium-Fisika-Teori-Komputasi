@@ -527,7 +527,7 @@
                             @elseif(Auth::user()->role === 'dosen')
                                 Lab Operations Access
                             @else
-                                Lab Operations Management
+                                Lab Access
                             @endif
                         </div>
                     </div>
@@ -603,18 +603,7 @@
                         <span class="font-medium">Analisis & Simulasi</span>
                     </a>
                     
-                    @unless(Auth::user()->isSuperAdmin())
-                        <!-- Limited Access Notice -->
-                        <div class="mx-4 my-4 p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
-                            <div class="flex items-center text-yellow-300 text-xs">
-                                <i class="fas fa-info-circle mr-2"></i>
-                                <span class="font-medium">Lab Operations Management</span>
-                            </div>
-                            <div class="text-yellow-200 text-xs mt-1">
-                                Contact Super Admin for system-wide access
-                            </div>
-                        </div>
-                    @endunless
+
                     
                     @if(Auth::user()->isSuperAdmin())
                         <!-- Section Divider -->

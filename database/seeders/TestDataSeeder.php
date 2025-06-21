@@ -69,6 +69,19 @@ class TestDataSeeder extends Seeder
             'approved_by' => 2,
         ]);
 
+        // Add new test entry from form
+        LabVisit::create([
+            'visit_code' => 'LVS202506210003',
+            'pic_name' => 'athar',
+            'institution' => 'universitas syiah kuala',
+            'contact' => '+62 81386999706',
+            'visit_type' => 'tur_fasilitas',
+            'visit_date' => '2025-06-11',
+            'participant_count' => 25,
+            'purpose_expectations' => 'ede',
+            'status' => 'pending',
+        ]);
+
         // Create test analysis requests
         AnalysisRequest::create([
             'request_code' => 'ANL202506210001',

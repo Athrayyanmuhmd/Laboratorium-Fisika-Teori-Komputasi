@@ -4533,7 +4533,7 @@
                         
                         if (result.success) {
                             showSuccessNotification(result.message);
-                            rentalForm.reset();
+                    rentalForm.reset();
                         } else {
                             showNotification(result.message || 'Terjadi kesalahan saat mengirim permohonan', 'error');
                         }
@@ -4588,7 +4588,7 @@
                         
                         if (result.success) {
                             showSuccessNotification(result.message);
-                            visitForm.reset();
+                    visitForm.reset();
                         } else {
                             showNotification(result.message || 'Terjadi kesalahan saat mengirim pengajuan', 'error');
                         }
@@ -4643,7 +4643,7 @@
                         
                         if (result.success) {
                             showSuccessNotification(result.message);
-                            testingForm.reset();
+                    testingForm.reset();
                         } else {
                             showNotification(result.message || 'Terjadi kesalahan saat mengirim request', 'error');
                         }

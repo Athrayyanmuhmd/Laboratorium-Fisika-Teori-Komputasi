@@ -11,6 +11,12 @@ class LabVisitController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
+        \Log::info('=== LAB VISIT FORM SUBMISSION ===');
+        \Log::info('Method: ' . $request->method());
+        \Log::info('URL: ' . $request->fullUrl());
+        \Log::info('Headers: ', $request->headers->all());
+        \Log::info('Request Data: ', $request->all());
+        
         $validator = Validator::make($request->all(), [
             'pic_name' => 'required|string|max:255',
             'institution' => 'required|string|max:255',
@@ -44,6 +50,8 @@ class LabVisitController extends Controller
                 'purpose_expectations' => $request->purpose_expectations,
                 'status' => 'pending',
             ]);
+
+            \Log::info('Lab visit created successfully', ['id' => $visit->id, 'visit_code' => $visitCode]);
 
             return response()->json([
                 'success' => true,
