@@ -79,10 +79,7 @@
                     <p class="text-slate-400 text-sm mb-4 md:mb-0">
                         © 2024 Laboratorium Fisika Teori dan Komputasi. All rights reserved.
                     </p>
-                    <div class="flex space-x-6">
-                        <a href="#" class="text-slate-400 hover:text-white text-sm transition-colors duration-300">Privacy Policy</a>
-                        <a href="#" class="text-slate-400 hover:text-white text-sm transition-colors duration-300">Terms of Service</a>
-                    </div>
+
                 </div>
             </div>
         </div>

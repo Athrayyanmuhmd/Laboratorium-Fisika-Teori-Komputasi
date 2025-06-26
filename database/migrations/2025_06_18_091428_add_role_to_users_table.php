@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->enum('role', ['super_admin', 'lab_admin', 'staff', 'user'])->default('user');
-            $table->foreignId('laboratory_id')->nullable()->constrained('laboratories')->onDelete('set null');
             $table->string('phone')->nullable();
             $table->string('position')->nullable(); // Jabatan
             $table->text('bio')->nullable();
@@ -28,8 +27,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['laboratory_id']);
-            $table->dropColumn(['role', 'laboratory_id', 'phone', 'position', 'bio', 'avatar', 'is_active']);
+            $table->dropColumn(['role', 'phone', 'position', 'bio', 'avatar', 'is_active']);
         });
     }
 };

@@ -156,3 +156,99 @@ Untuk pertanyaan terkait sistem atau akses demo:
 ---
 
 **© 2024 Laboratorium Fisika Teori dan Komputasi - Universitas Syiah Kuala** 
+
+# Demo Accounts - Sistem Laboratorium Fisika Komputasi
+
+## Akun Admin Dashboard
+
+### Admin Laboran
+- **Email**: admin@fisika.com
+- **Password**: admin123
+- **Role**: lab_admin (Laboran)
+- **Akses**: Dashboard Laboran dengan kontrol penuh terhadap semua fitur
+
+### Super Admin
+- **Email**: superadmin@fisika.com
+- **Password**: superadmin123
+- **Role**: super_admin
+- **Akses**: Akses penuh sistem termasuk user management
+
+## Cara Login
+
+1. Kunjungi: `http://localhost:8000/login`
+2. Masukkan email dan password sesuai akun di atas
+3. Setelah login, akan diarahkan ke dashboard sesuai role
+
+## Fitur yang Tersedia
+
+### Dashboard Laboran (admin@fisika.com)
+- **Manajemen Alat**: Kelola inventaris peralatan lab
+- **Peminjaman Alat**: Proses dan monitor peminjaman
+- **Layanan Pengujian**: Kelola permintaan pengujian sampel
+- **Kunjungan Lab**: Koordinasi kunjungan dan tour
+- **Jenis Pengujian**: Konfigurasi layanan pengujian
+- **Artikel & Berita**: Kelola konten website
+- **Data Pengurus**: Profil staff dan pengurus
+
+### Akses URL Langsung
+- Landing Page: `http://localhost:8000/`
+- Login: `http://localhost:8000/login`
+- Dashboard Laboran: `http://localhost:8000/admin` (setelah login)
+
+## Data Sampel yang Tersedia
+
+### Alat Laboratorium
+- Mikroskop Digital (5 unit)
+- Komputer Workstation (10 unit)
+- Sensor Suhu Digital (20 unit)
+- Oscilloscope (3 unit)
+- Function Generator (2 unit)
+
+### Jenis Pengujian
+- Analisis Spektroskopi (Rp 150,000)
+- Pengujian Konduktivitas Termal (Rp 200,000)
+- Analisis Struktur Kristal (Rp 300,000)
+- Pengujian Sifat Magnetik (Rp 250,000)
+- Simulasi Monte Carlo (Rp 500,000)
+- Analisis Data Eksperimental (Rp 100,000)
+
+### Staff/Pengurus
+- Dr. Ahmad Susanto, M.Si (Kepala Laboratorium)
+- Dr. Siti Nurhaliza, M.Sc (Koordinator Penelitian)
+- Budi Prasetyo, S.Si (Teknisi Senior)
+- Rina Kusumawati, S.Kom (Administrator Sistem)
+
+## Form Publik (Tanpa Login)
+
+Pengunjung dapat mengisi form di landing page:
+1. **Form Peminjaman Alat**
+2. **Form Pengujian Sampel**
+3. **Form Kunjungan Lab**
+
+Semua form akan masuk ke dashboard admin untuk dikelola.
+
+## Status Workflow
+
+Semua request menggunakan workflow:
+- **PENDING**: Menunggu persetujuan
+- **PROCESSING**: Sedang diproses
+- **COMPLETED**: Selesai
+- **CANCELLED**: Dibatalkan
+
+## Database
+
+Sistem menggunakan SQLite untuk development dengan struktur yang sesuai ERD yang telah didefinisikan.
+
+## Troubleshooting
+
+Jika mengalami masalah:
+1. Pastikan server berjalan: `php artisan serve`
+2. Periksa database: `php artisan migrate:status`
+3. Reset data: `php artisan migrate:fresh --seed`
+
+## Catatan Penting
+
+- Sistem sudah terintegrasi dengan struktur database baru
+- Semua fitur utama sudah berfungsi
+- Landing page sudah terhubung dengan database
+- Dashboard admin sudah operasional 

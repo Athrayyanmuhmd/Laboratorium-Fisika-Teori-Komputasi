@@ -11,9 +11,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Styles -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -537,8 +552,8 @@
             <!-- Navigation -->
             <nav class="mt-8 px-4">
                 <div class="space-y-3">
-                    <a href="{{ route('admin.dashboard') }}" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.dashboard') ? 'nav-link-active' : '' }}">
+                    <a href="{{ route('admin.laboran.dashboard') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.dashboard') ? 'nav-link-active' : '' }}">
                         <i class="fas fa-chart-line w-5 h-5 mr-3 text-blue-400"></i>
                         <span class="font-medium">Dashboard</span>
                     </a>
@@ -549,10 +564,10 @@
                         Manajemen Inventaris
                     </div>
                     
-                    <a href="{{ route('admin.equipment.index') }}" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.equipment.*') ? 'nav-link-active' : '' }}">
-                        <i class="fas fa-microscope w-5 h-5 mr-3 text-green-400"></i>
-                        <span class="font-medium">Alat Laboratorium</span>
+                    <a href="{{ route('admin.laboran.alat.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.alat.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-tools w-5 h-5 mr-3 text-green-400"></i>
+                        <span class="font-medium">Manajemen Alat</span>
                     </a>
                     
                     <!-- Section Divider -->
@@ -561,70 +576,55 @@
                         Manajemen Layanan
                     </div>
                     
-                    <a href="{{ route('admin.simulations.index') }}" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.simulations.*') ? 'nav-link-active' : '' }}">
-                        <i class="fas fa-laptop-code w-5 h-5 mr-3 text-purple-400"></i>
-                        <span class="font-medium">Simulasi & Komputasi</span>
+                    <a href="{{ route('admin.laboran.peminjaman.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.peminjaman.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-handshake w-5 h-5 mr-3 text-purple-400"></i>
+                        <span class="font-medium">Peminjaman Alat</span>
                     </a>
                     
-                    <a href="{{ route('admin.lab-access.index') }}" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.lab-access.*') ? 'nav-link-active' : '' }}">
-                        <i class="fas fa-door-open w-5 h-5 mr-3 text-yellow-400"></i>
-                        <span class="font-medium">Akses Laboratorium</span>
+                    <a href="{{ route('admin.laboran.pengujian.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.pengujian.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-microscope w-5 h-5 mr-3 text-yellow-400"></i>
+                        <span class="font-medium">Layanan Pengujian</span>
                     </a>
                     
-                    <a href="{{ route('admin.consultations.index') }}" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.consultations.*') ? 'nav-link-active' : '' }}">
-                        <i class="fas fa-user-tie w-5 h-5 mr-3 text-orange-400"></i>
-                        <span class="font-medium">Konsultasi</span>
+                    <a href="{{ route('admin.laboran.kunjungan.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.kunjungan.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-users w-5 h-5 mr-3 text-orange-400"></i>
+                        <span class="font-medium">Kunjungan Lab</span>
                     </a>
                     
                     <!-- Section Divider -->
                     <div class="section-divider"></div>
                     <div class="px-4 py-2 text-blue-300 text-xs font-semibold uppercase tracking-wider">
-                        Layanan Fisika Teori & Komputasi
+                        Manajemen Konten
                     </div>
                     
-                    <a href="{{ route('admin.workstations.index') }}" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.workstations.*') ? 'nav-link-active' : '' }}">
-                        <i class="fas fa-desktop w-5 h-5 mr-3 text-cyan-400"></i>
-                        <span class="font-medium">Penyewaan Workstation</span>
+                    <a href="{{ route('admin.laboran.jenis-pengujian.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.jenis-pengujian.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-flask w-5 h-5 mr-3 text-indigo-400"></i>
+                        <span class="font-medium">Jenis Pengujian</span>
                     </a>
                     
-                    <a href="{{ route('admin.lab-visits.index') }}" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.lab-visits.*') ? 'nav-link-active' : '' }}">
-                        <i class="fas fa-users w-5 h-5 mr-3 text-emerald-400"></i>
-                        <span class="font-medium">Kunjungan Lab</span>
+                    <a href="{{ route('admin.laboran.artikel.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.artikel.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-newspaper w-5 h-5 mr-3 text-green-400"></i>
+                        <span class="font-medium">Artikel & Berita</span>
                     </a>
                     
-                    <a href="{{ route('admin.analysis-requests.index') }}" 
-                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.analysis-requests.*') ? 'nav-link-active' : '' }}">
-                        <i class="fas fa-chart-line w-5 h-5 mr-3 text-violet-400"></i>
-                        <span class="font-medium">Analisis & Simulasi</span>
+                    <a href="{{ route('admin.laboran.pengurus.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.pengurus.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-user-tie w-5 h-5 mr-3 text-cyan-400"></i>
+                        <span class="font-medium">Data Pengurus</span>
                     </a>
                     
+                    <a href="{{ route('admin.laboran.maintenance.index') }}" 
+                       class="nav-link flex items-center px-4 py-3 text-white transition-all {{ Request::routeIs('admin.laboran.maintenance.*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-tools w-5 h-5 mr-3 text-orange-400"></i>
+                        <span class="font-medium">Maintenance</span>
+                    </a>
 
-                    
-                    @if(Auth::user()->isSuperAdmin())
-                        <!-- Section Divider -->
-                        <div class="section-divider"></div>
-                        <div class="px-4 py-2 text-blue-300 text-xs font-semibold uppercase tracking-wider">
-                            Sistem
-                        </div>
-                        
-                        <a href="#" 
-                           class="nav-link flex items-center px-4 py-3 text-white transition-all">
-                            <i class="fas fa-cog w-5 h-5 mr-3 text-gray-400"></i>
-                            <span class="font-medium">Pengaturan</span>
-                        </a>
-                        
-                        <!-- Super Admin Panel Link -->
-                        <a href="{{ route('super-admin.dashboard') }}" 
-                           class="nav-link flex items-center px-4 py-3 text-white transition-all bg-purple-500/20 border border-purple-400/30 rounded-lg mx-4 mt-3">
-                            <i class="fas fa-crown w-5 h-5 mr-3 text-purple-300"></i>
-                            <span class="font-medium">Super Admin Panel</span>
-                        </a>
-                    @endif
+
                 </div>
             </nav>
             

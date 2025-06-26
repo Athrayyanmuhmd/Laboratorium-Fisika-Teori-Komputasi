@@ -1,160 +1,257 @@
 <!-- Galeri Laboratorium Section -->
-<section id="galeri" class="py-16 bg-gray-50 relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-8">Galeri Laboratorium</h2>
-            <p class="text-gray-600 text-lg max-w-3xl mx-auto">
+<section id="galeri" class="py-12 relative overflow-hidden min-h-screen flex flex-col justify-center" style="background-image: url('/images/background_admin_gedung_fmipa.jpeg'); background-size: cover; background-position: center; background-attachment: fixed;">
+    <!-- Dark overlay for readability -->
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                Galeri Laboratorium
+            </h2>
+            <p class="text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed">
                 Dokumentasi fasilitas dan aktivitas di Lab Fisika Teori dan Komputasi dengan 28 PC workstations
             </p>
         </div>
         
-        <!-- Gallery Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @forelse ($featuredGallery as $gallery)
-                <div class="group cursor-pointer" onclick="openLightbox('{{ Storage::url($gallery->image_path) }}', '{{ $gallery->title }}', '{{ $gallery->description }}')">
-                    <div class="relative overflow-hidden rounded-2xl bg-slate-200 aspect-video shadow-xl group-hover:shadow-2xl transition-all duration-600">
-                        @if($gallery->image_path)
-                            <img src="{{ Storage::url($gallery->image_path) }}" alt="{{ $gallery->title }}" 
-                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        @else
-                            <div class="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
-                                <i class="fas fa-{{ $gallery->icon ?? 'image' }} text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
-                            </div>
-                        @endif
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                        <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <i class="fas fa-expand-alt text-white text-sm"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-2">{{ $gallery->title }}</h3>
-                        <p class="text-gray-600 text-sm">{{ $gallery->description }}</p>
-                        @if($gallery->category)
-                            <span class="inline-block mt-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                {{ ucfirst($gallery->category) }}
-                            </span>
-                        @endif
-                    </div>
-                </div>
-            @empty
-                <!-- Default placeholder gallery items -->
-                <div class="group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-2xl bg-slate-200 aspect-video shadow-xl group-hover:shadow-2xl transition-all duration-600">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
-                            <i class="fas fa-desktop text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-2">PC Workstation Setup</h3>
-                        <p class="text-gray-600 text-sm">Konfigurasi 28 unit PC untuk komputasi dan simulasi</p>
-                    </div>
+        <!-- Gallery Container -->
+        <div class="gallery-container">
+            <div class="card" onclick="openLightbox('/images/contoh.jpeg', 'Laboratorium Komputer', 'Fasilitas komputer modern dengan 28 workstations untuk pembelajaran dan penelitian')">
+                <img src="/images/contoh.jpeg" alt="Laboratorium Komputer">
+                <div class="card__head">Laboratorium Komputer</div>
                 </div>
 
-                <div class="group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-2xl bg-slate-200 aspect-video shadow-xl group-hover:shadow-2xl transition-all duration-600">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
-                            <i class="fas fa-code text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-2">Software Development</h3>
-                        <p class="text-gray-600 text-sm">Area pengembangan aplikasi dan web design</p>
-                    </div>
+            <div class="card" onclick="openLightbox('/images/contoh.jpeg', 'Ruang Kerja Mahasiswa', 'Area kerja kolaboratif untuk mahasiswa mengerjakan proyek dan tugas')">
+                <img src="/images/contoh.jpeg" alt="Ruang Kerja Mahasiswa">
+                <div class="card__head">Ruang Kerja Mahasiswa</div>
                 </div>
 
-                <div class="group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-2xl bg-slate-200 aspect-video shadow-xl group-hover:shadow-2xl transition-all duration-600">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
-                            <i class="fas fa-chart-line text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-2">Data Analysis Station</h3>
-                        <p class="text-gray-600 text-sm">Workstation khusus untuk analisis data geofisika</p>
-                    </div>
+            <div class="card" onclick="openLightbox('/images/contoh.jpeg', 'Peralatan Laboratorium', 'Peralatan dan infrastruktur teknologi terdepan untuk penelitian')">
+                <img src="/images/contoh.jpeg" alt="Peralatan Laboratorium">
+                <div class="card__head">Peralatan Laboratorium</div>
                 </div>
 
-                <div class="group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-2xl bg-slate-200 aspect-video shadow-xl group-hover:shadow-2xl transition-all duration-600">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
-                            <i class="fas fa-camera text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-2">Digital Photography Lab</h3>
-                        <p class="text-gray-600 text-sm">Studio fotografi digital dan editing</p>
-                    </div>
+            <div class="card" onclick="openLightbox('/images/contoh.jpeg', 'Aktivitas Penelitian', 'Kegiatan penelitian dan eksperimen mahasiswa dalam bidang fisika komputasi')">
+                <img src="/images/contoh.jpeg" alt="Aktivitas Penelitian">
+                <div class="card__head">Aktivitas Penelitian</div>
                 </div>
 
-                <div class="group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-2xl bg-slate-200 aspect-video shadow-xl group-hover:shadow-2xl transition-all duration-600">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
-                            <i class="fas fa-users text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-2">Collaborative Workspace</h3>
-                        <p class="text-gray-600 text-sm">Area kolaborasi untuk project tim</p>
+            <div class="card" onclick="openLightbox('/images/contoh.jpeg', 'Software Development', 'Area pengembangan software dan aplikasi untuk simulasi fisika')">
+                <img src="/images/contoh.jpeg" alt="Software Development">
+                <div class="card__head">Software Development</div>
                     </div>
                 </div>
-
-                <div class="group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-2xl bg-slate-200 aspect-video shadow-xl group-hover:shadow-2xl transition-all duration-600">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
-                            <i class="fas fa-server text-white text-4xl group-hover:scale-110 transition-transform duration-300"></i>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                    </div>
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-2">Server & Networking</h3>
-                        <p class="text-gray-600 text-sm">Infrastruktur jaringan dan server laboratorium</p>
-                    </div>
-                </div>
-            @endforelse
         </div>
 
-        <!-- Lightbox Modal -->
-        <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden items-center justify-center p-4">
-            <div class="max-w-4xl max-h-full relative">
-                <button onclick="closeLightbox()" class="absolute -top-10 right-0 text-white text-2xl hover:text-gray-300">
+    <!-- Enhanced Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 bg-black/95 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="max-w-6xl max-h-full relative animate-fade-in">
+            <!-- Close Button -->
+            <button onclick="closeLightbox()" 
+                    class="absolute -top-12 right-0 text-white text-2xl hover:text-gray-300 transition-colors duration-300 bg-white/10 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center border border-white/20">
                     <i class="fas fa-times"></i>
                 </button>
-                <img id="lightbox-image" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg">
-                <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white p-4 rounded-b-lg">
-                    <h3 id="lightbox-title" class="text-xl font-semibold mb-2"></h3>
-                    <p id="lightbox-description" class="text-gray-300"></p>
+            
+            <!-- Image Container -->
+            <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img id="lightbox-image" src="" alt="" class="max-w-full max-h-[80vh] object-contain">
+                
+                <!-- Info Overlay -->
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white p-6">
+                    <h3 id="lightbox-title" class="text-2xl font-bold mb-2"></h3>
+                    <p id="lightbox-description" class="text-gray-200 text-lg"></p>
                 </div>
             </div>
+            
+            <!-- Navigation Arrows -->
+            <button onclick="prevImage()" 
+                    class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-gray-300 transition-colors duration-300 bg-white/10 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center border border-white/20">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button onclick="nextImage()" 
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-gray-300 transition-colors duration-300 bg-white/10 backdrop-blur-sm rounded-full w-12 h-12 flex items-center justify-center border border-white/20">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </div>
 </section>
 
+<style>
+/* Gallery Styling */
+.gallery-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10vmin;
+    overflow: hidden;
+    transform: skew(5deg);
+}
+
+.gallery-container .card {
+    flex: 1;
+    transition: all 1s ease-in-out;
+    height: 75vmin;
+    position: relative;
+    cursor: pointer;
+}
+
+.gallery-container .card .card__head {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    padding: 0.5em;
+    transform: rotate(-90deg);
+    transform-origin: 0% 0%;
+    transition: all 0.5s ease-in-out;
+    min-width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 1em;
+    white-space: nowrap;
+    border-radius: 8px;
+}
+
+.gallery-container .card:hover {
+    flex-grow: 10;
+}
+
+.gallery-container .card:hover img {
+    filter: grayscale(0);
+}
+
+.gallery-container .card:hover .card__head {
+    text-align: center;
+    top: calc(100% - 2em);
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    font-size: 2em;
+    transform: rotate(0deg) skew(-5deg);
+    border-radius: 12px;
+}
+
+.gallery-container .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 1s ease-in-out;
+    filter: grayscale(100%);
+}
+
+.gallery-container .card:not(:nth-child(5)) {
+    margin-right: 1em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .gallery-container {
+        flex-direction: column;
+        transform: none;
+        margin: 5vmin;
+    }
+    
+    .gallery-container .card {
+        height: 30vmin;
+        width: 100%;
+        margin-bottom: 1em;
+        margin-right: 0 !important;
+    }
+    
+    .gallery-container .card .card__head {
+        transform: none;
+        position: relative;
+        bottom: auto;
+        left: auto;
+        font-size: 1.2em;
+        min-width: auto;
+    }
+    
+    .gallery-container .card:hover .card__head {
+        transform: none;
+        top: auto;
+        font-size: 1.2em;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Close modal when clicking outside */
+#lightbox {
+    backdrop-filter: blur(10px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+</style>
+
 <script>
-function openLightbox(imageSrc, title, description) {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImage = document.getElementById('lightbox-image');
-    const lightboxTitle = document.getElementById('lightbox-title');
-    const lightboxDescription = document.getElementById('lightbox-description');
-    
-    lightboxImage.src = imageSrc;
-    lightboxTitle.textContent = title;
-    lightboxDescription.textContent = description;
-    
-    lightbox.classList.remove('hidden');
-    lightbox.classList.add('flex');
+let currentImageIndex = 0;
+const images = [
+    { src: '/images/contoh.jpeg', title: 'Laboratorium Komputer', desc: 'Fasilitas komputer modern dengan 28 workstations untuk pembelajaran dan penelitian' },
+    { src: '/images/contoh.jpeg', title: 'Ruang Kerja Mahasiswa', desc: 'Area kerja kolaboratif untuk mahasiswa mengerjakan proyek dan tugas' },
+    { src: '/images/contoh.jpeg', title: 'Peralatan Laboratorium', desc: 'Peralatan dan infrastruktur teknologi terdepan untuk penelitian' },
+    { src: '/images/contoh.jpeg', title: 'Aktivitas Penelitian', desc: 'Kegiatan penelitian dan eksperimen mahasiswa dalam bidang fisika komputasi' },
+    { src: '/images/contoh.jpeg', title: 'Software Development', desc: 'Area pengembangan software dan aplikasi untuk simulasi fisika' }
+];
+
+function openLightbox(src, title, description) {
+    currentImageIndex = images.findIndex(img => img.src === src);
+    document.getElementById('lightbox-image').src = src;
+    document.getElementById('lightbox-title').textContent = title;
+    document.getElementById('lightbox-description').textContent = description;
+    document.getElementById('lightbox').classList.remove('hidden');
+    document.getElementById('lightbox').classList.add('flex');
     document.body.style.overflow = 'hidden';
 }
 
 function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    lightbox.classList.add('hidden');
-    lightbox.classList.remove('flex');
+    document.getElementById('lightbox').classList.add('hidden');
+    document.getElementById('lightbox').classList.remove('flex');
     document.body.style.overflow = 'auto';
+}
+
+function nextImage() {
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+    const img = images[currentImageIndex];
+    document.getElementById('lightbox-image').src = img.src;
+    document.getElementById('lightbox-title').textContent = img.title;
+    document.getElementById('lightbox-description').textContent = img.desc;
+}
+
+function prevImage() {
+    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    const img = images[currentImageIndex];
+    document.getElementById('lightbox-image').src = img.src;
+    document.getElementById('lightbox-title').textContent = img.title;
+    document.getElementById('lightbox-description').textContent = img.desc;
 }
 
 // Close lightbox when clicking outside the image
@@ -164,10 +261,16 @@ document.getElementById('lightbox').addEventListener('click', function(e) {
     }
 });
 
-// Close lightbox with escape key
+// Keyboard navigation
 document.addEventListener('keydown', function(e) {
+    if (document.getElementById('lightbox').classList.contains('flex')) {
     if (e.key === 'Escape') {
         closeLightbox();
+        } else if (e.key === 'ArrowRight') {
+            nextImage();
+        } else if (e.key === 'ArrowLeft') {
+            prevImage();
+        }
     }
 });
 </script>

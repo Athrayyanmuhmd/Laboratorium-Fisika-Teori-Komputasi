@@ -1,225 +1,120 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LaboratoryController;
-use App\Http\Controllers\RentalController;
-use App\Http\Controllers\VisitController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\WorkstationController;
-use App\Http\Controllers\LabVisitController;
-use App\Http\Controllers\AnalysisController;
+use App\Http\Controllers\PublicController;
+use App\Http\Controllers\Admin\{LaboranDashboardController, MaintenanceController};
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\SuperAdminDashboardController;
-use App\Http\Controllers\Admin\AdminLaboratoryController;
-use App\Http\Controllers\Admin\AdminEquipmentController;
-use App\Http\Controllers\Admin\AdminRentalController;
-use App\Http\Controllers\Admin\AdminVisitController;
-use App\Http\Controllers\Admin\AdminTestController;
-use App\Http\Controllers\Admin\AdminComputerController;
-use App\Http\Controllers\Admin\AdminWorkstationController;
-use App\Http\Controllers\Admin\AdminLabVisitController;
-use App\Http\Controllers\Admin\AdminAnalysisController;
-use App\Http\Controllers\Admin\SuperAdminUserController;
-use App\Http\Controllers\Admin\SuperAdminStaffController;
-use App\Http\Controllers\Admin\SuperAdminGalleryController;
-use Illuminate\Http\Request;
 
-// Main Single Page Application
-Route::get('/', [LaboratoryController::class, 'index'])->name('home');
+// ===== PUBLIC ROUTES =====
+Route::get('/', [PublicController::class, 'index'])->name('home');
 
-// Redirect all section routes to single page with anchors
-Route::get('/layanan', function () {
-    return redirect('/#layanan');
-})->name('services');
+// Form Submissions
+Route::post('/submit-peminjaman', [PublicController::class, 'submitPeminjaman'])->name('public.peminjaman.submit');
+Route::post('/submit-pengujian', [PublicController::class, 'submitPengujian'])->name('public.pengujian.submit');
+Route::post('/submit-kunjungan', [PublicController::class, 'submitKunjungan'])->name('public.kunjungan.submit');
 
-Route::get('/fasilitas', function () {
-    return redirect('/#fasilitas');
-})->name('facilities');
+// API Endpoints
+Route::get('/api/alat-tersedia', [PublicController::class, 'getAlatTersedia'])->name('api.alat');
+Route::get('/api/jenis-pengujian', [PublicController::class, 'getJenisPengujian'])->name('api.pengujian');
 
-Route::get('/penelitian', function () {
-    return redirect('/#penelitian');
-})->name('research');
-
-Route::get('/kontak', function () {
-    return redirect('/#kontak');
-})->name('contact');
-
-// Layanan Simulasi & Komputasi
-Route::prefix('simulasi')->name('simulation.')->group(function () {
-    Route::get('/', [RentalController::class, 'index'])->name('index');
-    Route::get('/request', [RentalController::class, 'create'])->name('create');
-    Route::post('/', [RentalController::class, 'store'])->name('store');
-    Route::get('/track', [RentalController::class, 'track'])->name('track');
-});
-
-// Layanan Akses Lab
-Route::prefix('akses-lab')->name('lab-access.')->group(function () {
-    Route::get('/', [VisitController::class, 'index'])->name('index');
-    Route::get('/request', [VisitController::class, 'create'])->name('create');
-    Route::post('/', [VisitController::class, 'store'])->name('store');
-    Route::get('/track', [VisitController::class, 'track'])->name('track');
-});
-
-// Layanan Konsultasi
-Route::prefix('konsultasi')->name('consultation.')->group(function () {
-    Route::get('/', [TestController::class, 'index'])->name('index');
-    Route::get('/request', [TestController::class, 'create'])->name('create');
-    Route::post('/', [TestController::class, 'store'])->name('store');
-    Route::get('/track', [TestController::class, 'track'])->name('track');
-});
-
-// Layanan Penyewaan Workstation
-Route::prefix('workstation')->name('workstation.')->group(function () {
-    Route::post('/', function(Request $request) {
-        \Log::info('=== ROUTE WORKSTATION ACCESSED ===');
-        \Log::info('Method: ' . $request->method());
-        \Log::info('Data: ', $request->all());
-        
-        // Call the actual controller
-        return app(WorkstationController::class)->store($request);
-    })->name('store');
-    Route::get('/track', [WorkstationController::class, 'track'])->name('track');
-});
-
-// Layanan Kunjungan Lab
-Route::prefix('lab-visit')->name('lab-visit.')->group(function () {
-    Route::post('/', [LabVisitController::class, 'store'])->name('store');
-    Route::get('/track', [LabVisitController::class, 'track'])->name('track');
-});
-
-// Layanan Analisis & Simulasi
-Route::prefix('analysis')->name('analysis.')->group(function () {
-    Route::post('/', [AnalysisController::class, 'store'])->name('store');
-    Route::get('/track', [AnalysisController::class, 'track'])->name('track');
-});
-
-// Authentication Routes
+// ===== AUTHENTICATION =====
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Super Admin Routes (Protected)
-Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'super_admin'])->group(function () {
-    Route::get('/', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+// ===== ADMIN ROUTES =====
+Route::middleware(['auth'])->group(function () {
     
-    // User Management
-    Route::resource('users', SuperAdminUserController::class);
-    Route::patch('users/{user}/toggle-status', [SuperAdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
-    Route::patch('users/{user}/change-role', [SuperAdminUserController::class, 'changeRole'])->name('users.change-role');
+    // Dashboard Route
+    Route::get('/admin/laboran', [LaboranDashboardController::class, 'index'])->name('admin.laboran.dashboard');
+    Route::get('/admin', function() { return redirect()->route('admin.laboran.dashboard'); });
     
-    // Staff Management
-    Route::resource('staff', SuperAdminStaffController::class);
-    Route::patch('staff/{staff}/toggle-status', [SuperAdminStaffController::class, 'toggleStatus'])->name('staff.toggle-status');
-    Route::patch('staff/{staff}/toggle-featured', [SuperAdminStaffController::class, 'toggleFeatured'])->name('staff.toggle-featured');
-    
-    // Gallery Management
-    Route::resource('gallery', SuperAdminGalleryController::class);
-    Route::patch('gallery/{gallery}/toggle-status', [SuperAdminGalleryController::class, 'toggleStatus'])->name('gallery.toggle-status');
-    Route::patch('gallery/{gallery}/toggle-featured', [SuperAdminGalleryController::class, 'toggleFeatured'])->name('gallery.toggle-featured');
-    
-    // System Analytics & Reports
-    Route::get('/analytics', [SuperAdminDashboardController::class, 'analytics'])->name('analytics');
-    Route::get('/reports', [SuperAdminDashboardController::class, 'reports'])->name('reports');
-    Route::get('/system-logs', [SuperAdminDashboardController::class, 'systemLogs'])->name('system-logs');
+    Route::prefix('admin/laboran')->name('admin.laboran.')->group(function () {
+        
+        // ===== MANAJEMEN ALAT =====
+        Route::prefix('alat')->name('alat.')->group(function () {
+            Route::get('/', [LaboranDashboardController::class, 'alat'])->name('index');
+            Route::post('/', [LaboranDashboardController::class, 'alatStore'])->name('store');
+            Route::put('/{alat}', [LaboranDashboardController::class, 'alatUpdate'])->name('update');
+            Route::delete('/{alat}', [LaboranDashboardController::class, 'alatDestroy'])->name('destroy');
+            Route::get('/export/{format}', [LaboranDashboardController::class, 'alatExport'])->name('export');
+        });
+        
+        // ===== MANAJEMEN PEMINJAMAN =====
+                    Route::prefix('peminjaman')->name('peminjaman.')->group(function () {
+                Route::get('/', [LaboranDashboardController::class, 'peminjaman'])->name('index');
+                Route::get('/export/{format}', [LaboranDashboardController::class, 'peminjamanExport'])->name('export');
+                Route::get('/{peminjaman}', [LaboranDashboardController::class, 'peminjamanShow'])->name('show');
+                Route::patch('/{peminjaman}/status', [LaboranDashboardController::class, 'peminjamanUpdateStatus'])->name('update-status');
+                Route::delete('/{peminjaman}', [LaboranDashboardController::class, 'peminjamanDestroy'])->name('destroy');
+            });
+        
+        // ===== MANAJEMEN PENGUJIAN =====
+        Route::prefix('pengujian')->name('pengujian.')->group(function () {
+            Route::get('/', [LaboranDashboardController::class, 'pengujian'])->name('index');
+            Route::get('/{pengujian}', [LaboranDashboardController::class, 'pengujianShow'])->name('show');
+            Route::patch('/{pengujian}/status', [LaboranDashboardController::class, 'pengujianUpdateStatus'])->name('update-status');
+            Route::delete('/{pengujian}', [LaboranDashboardController::class, 'pengujianDestroy'])->name('destroy');
+        });
+        
+        // ===== MANAJEMEN KUNJUNGAN =====
+        Route::prefix('kunjungan')->name('kunjungan.')->group(function () {
+            Route::get('/', [LaboranDashboardController::class, 'kunjungan'])->name('index');
+            Route::get('/export/{format}', [LaboranDashboardController::class, 'kunjunganExport'])->name('export');
+            Route::get('/{kunjungan}', [LaboranDashboardController::class, 'kunjunganShow'])->name('show');
+            Route::patch('/{kunjungan}/status', [LaboranDashboardController::class, 'kunjunganUpdateStatus'])->name('update-status');
+            Route::delete('/{kunjungan}', [LaboranDashboardController::class, 'kunjunganDestroy'])->name('destroy');
+        });
+        
+        // ===== MANAJEMEN JENIS PENGUJIAN =====
+        Route::prefix('jenis-pengujian')->name('jenis-pengujian.')->group(function () {
+            Route::get('/', [LaboranDashboardController::class, 'jenisPengujian'])->name('index');
+            Route::post('/', [LaboranDashboardController::class, 'jenisPengujianStore'])->name('store');
+            Route::put('/{jenisPengujian}', [LaboranDashboardController::class, 'jenisPengujianUpdate'])->name('update');
+            Route::delete('/{jenisPengujian}', [LaboranDashboardController::class, 'jenisPengujianDestroy'])->name('destroy');
+            Route::get('/export/{format}', [LaboranDashboardController::class, 'jenisPengujianExport'])->name('export');
+            Route::patch('/{jenisPengujian}/toggle', [LaboranDashboardController::class, 'jenisPengujianToggleAvailability'])->name('toggle');
+        });
+        
+        // ===== MANAJEMEN KONTEN =====
+        Route::prefix('artikel')->name('artikel.')->group(function () {
+            Route::get('/', [LaboranDashboardController::class, 'artikel'])->name('index');
+            Route::post('/', [LaboranDashboardController::class, 'artikelStore'])->name('store');
+            Route::put('/{artikel}', [LaboranDashboardController::class, 'artikelUpdate'])->name('update');
+            Route::delete('/{artikel}', [LaboranDashboardController::class, 'artikelDestroy'])->name('destroy');
+            Route::get('/export/{format}', [LaboranDashboardController::class, 'artikelExport'])->name('export');
+        });
+        
+        // ===== MANAJEMEN PENGURUS =====
+        Route::prefix('pengurus')->name('pengurus.')->group(function () {
+            Route::get('/', [LaboranDashboardController::class, 'pengurus'])->name('index');
+            Route::post('/', [LaboranDashboardController::class, 'pengurusStore'])->name('store');
+            Route::put('/{pengurus}', [LaboranDashboardController::class, 'pengurusUpdate'])->name('update');
+            Route::delete('/{pengurus}', [LaboranDashboardController::class, 'pengurusDestroy'])->name('destroy');
+            Route::get('/export/{format}', [LaboranDashboardController::class, 'pengurusExport'])->name('export');
+            Route::patch('/{pengurus}/toggle', [LaboranDashboardController::class, 'pengurusToggleStatus'])->name('toggle');
+        });
+        
+        // ===== MANAJEMEN MAINTENANCE =====
+        Route::prefix('maintenance')->name('maintenance.')->group(function () {
+            Route::get('/', [MaintenanceController::class, 'index'])->name('index');
+            Route::post('/', [MaintenanceController::class, 'store'])->name('store');
+            Route::get('/report', [MaintenanceController::class, 'report'])->name('report');
+            Route::get('/alat-tersedia', [MaintenanceController::class, 'getAlatTersedia'])->name('alat-tersedia');
+            Route::get('/{maintenance}', [MaintenanceController::class, 'show'])->name('show');
+            Route::patch('/{maintenance}/status', [MaintenanceController::class, 'updateStatus'])->name('update-status');
+            Route::delete('/{maintenance}', [MaintenanceController::class, 'destroy'])->name('destroy');
+        });
+        
+    });
 });
 
-// Admin Routes (Protected)
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    
-    // Equipment Management (untuk workstation dan software)
-    Route::resource('equipment', AdminEquipmentController::class);
-    Route::post('equipment/{equipment}/toggle-status', [AdminEquipmentController::class, 'toggleStatus'])->name('equipment.toggle-status');
-    
-    // Computer Layout Management
-    Route::resource('computers', AdminComputerController::class);
-    Route::put('computers/{computer}/status', [AdminComputerController::class, 'updateStatus'])->name('computers.update-status');
-    Route::get('computers/{computer}/data', [AdminComputerController::class, 'getComputer'])->name('computers.get-data');
-    Route::put('computers/{computer}/quick-update', [AdminComputerController::class, 'quickUpdate'])->name('computers.quick-update');
-    Route::get('computers-stats', [AdminComputerController::class, 'getStats'])->name('computers.stats');
-    
-    // Simulation Request Management
-    Route::resource('simulations', AdminRentalController::class)->only(['index', 'show', 'edit', 'update']);
-    Route::patch('simulations/{rental}/approve', [AdminRentalController::class, 'approve'])->name('simulations.approve');
-    Route::patch('simulations/{rental}/reject', [AdminRentalController::class, 'reject'])->name('simulations.reject');
-    Route::patch('simulations/{rental}/complete', [AdminRentalController::class, 'return'])->name('simulations.complete');
-    
-    // Lab Access Management
-    Route::resource('lab-access', AdminVisitController::class);
-    Route::patch('lab-access/{visit}/approve', [AdminVisitController::class, 'approve'])->name('lab-access.approve');
-    Route::patch('lab-access/{visit}/reject', [AdminVisitController::class, 'reject'])->name('lab-access.reject');
-    Route::patch('lab-access/{visit}/complete', [AdminVisitController::class, 'complete'])->name('lab-access.complete');
-    
-    // Consultation Management
-    Route::resource('consultations', AdminTestController::class);
-    Route::patch('consultations/{test}/approve', [AdminTestController::class, 'approve'])->name('consultations.approve');
-    Route::patch('consultations/{test}/reject', [AdminTestController::class, 'reject'])->name('consultations.reject');
-    Route::patch('consultations/{test}/start', [AdminTestController::class, 'start'])->name('consultations.start');
-    Route::patch('consultations/{test}/complete', [AdminTestController::class, 'complete'])->name('consultations.complete');
-    
-    // Workstation Management
-    Route::resource('workstations', AdminWorkstationController::class)->only(['index', 'show']);
-    Route::patch('workstations/{workstation}/approve', [AdminWorkstationController::class, 'approve'])->name('workstations.approve');
-    Route::patch('workstations/{workstation}/reject', [AdminWorkstationController::class, 'reject'])->name('workstations.reject');
-    Route::patch('workstations/{workstation}/complete', [AdminWorkstationController::class, 'complete'])->name('workstations.complete');
-    
-    // Lab Visit Management
-    Route::resource('lab-visits', AdminLabVisitController::class)->only(['index', 'show']);
-    Route::patch('lab-visits/{labVisit}/approve', [AdminLabVisitController::class, 'approve'])->name('lab-visits.approve');
-    Route::patch('lab-visits/{labVisit}/reject', [AdminLabVisitController::class, 'reject'])->name('lab-visits.reject');
-    Route::patch('lab-visits/{labVisit}/complete', [AdminLabVisitController::class, 'complete'])->name('lab-visits.complete');
-    
-    // Analysis Request Management
-    Route::resource('analysis-requests', AdminAnalysisController::class)->only(['index', 'show']);
-    Route::patch('analysis-requests/{analysis}/approve', [AdminAnalysisController::class, 'approve'])->name('analysis-requests.approve');
-    Route::patch('analysis-requests/{analysis}/reject', [AdminAnalysisController::class, 'reject'])->name('analysis-requests.reject');
-    Route::patch('analysis-requests/{analysis}/start', [AdminAnalysisController::class, 'startProgress'])->name('analysis-requests.start');
-    Route::patch('analysis-requests/{analysis}/complete', [AdminAnalysisController::class, 'complete'])->name('analysis-requests.complete');
-});
-
-// Legacy routes untuk kompatibilitas (redirect ke single page)
-Route::get('/laboratories', function () {
-    return redirect('/', 301);
-});
-
-Route::get('/rentals', function () {
-    return redirect('/simulasi', 301);
-});
-
-Route::get('/visits', function () {
-    return redirect('/akses-lab', 301);
-});
-
-Route::get('/tests', function () {
-    return redirect('/konsultasi', 301);
-});
-
-// Additional redirects for old section-based URLs
-Route::get('/beranda', function () {
-    return redirect('/#beranda');
-});
-
-Route::get('/home', function () {
-    return redirect('/#beranda');
-});
-
-// Test route untuk debugging
-Route::post('/test-workstation', function(Request $request) {
-    \Log::info('Test workstation route called', $request->all());
-    return response()->json(['success' => true, 'message' => 'Test route works', 'data' => $request->all()]);
-});
-
-// Test route untuk form submission debugging
-Route::post('/debug-workstation', function(Request $request) {
-    \Log::info('=== DEBUG WORKSTATION ROUTE CALLED ===');
-    \Log::info('Method: ' . $request->method());
-    \Log::info('Headers: ', $request->headers->all());
-    \Log::info('Data: ', $request->all());
-    return response()->json([
-        'success' => true, 
-        'message' => 'Debug route reached successfully!',
-        'received_data' => $request->all(),
-        'method' => $request->method()
-    ]);
-});
+// ===== LEGACY REDIRECTS =====
+Route::get('/laboratories', function () { return redirect('/', 301); });
+Route::get('/simulasi', function () { return redirect('/#layanan'); });
+Route::get('/akses-lab', function () { return redirect('/#layanan'); });
+Route::get('/konsultasi', function () { return redirect('/#layanan'); });
+Route::get('/workstation', function () { return redirect('/#layanan'); });
+Route::get('/lab-visit', function () { return redirect('/#layanan'); });
+Route::get('/analysis', function () { return redirect('/#layanan'); });
+Route::get('/super-admin', function() { return redirect()->route('admin.laboran.dashboard'); }); 

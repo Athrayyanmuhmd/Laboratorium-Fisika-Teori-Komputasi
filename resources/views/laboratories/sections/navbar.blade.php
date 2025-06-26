@@ -1,55 +1,71 @@
 <!-- Enhanced Glassmorphism Navigation -->
-<nav id="navbar" class="fixed w-full z-50 top-0 navbar-glassmorphism nav-glass-reflection">
+<nav id="navbar" class="fixed w-full z-50 top-0 bg-black/30 backdrop-blur-lg border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20 navbar-border-glow">
+        <div class="flex items-center justify-between h-20">
             <!-- Logo - Left -->
             <div class="flex-shrink-0">
-                <a href="/" class="navbar-logo-container">
-                    <img src="{{ asset('images/logo-fisika-putih.png') }}" alt="Lab Fisika Komputasi" class="navbar-logo">
+                <a href="/" class="flex items-center">
+                    <img src="{{ asset('images/logo-fisika-putih.png') }}" 
+                         alt="Lab Fisika Komputasi" 
+                         class="h-12 w-auto object-contain">
                 </a>
             </div>
             
-            <!-- Navigation Menu - Center (shifted left) -->
-            <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 -translate-x-8">
-                <div class="flex items-center space-x-6">
-                    <a href="#beranda" class="nav-link nav-link-enhanced nav-click-effect px-4 py-3 rounded-xl text-sm font-semibold tracking-wide">Beranda</a>
-                    <a href="#staf" class="nav-link nav-link-enhanced nav-click-effect px-4 py-3 rounded-xl text-sm font-semibold tracking-wide">Staf Ahli</a>
-                    <a href="#layanan" class="nav-link nav-link-enhanced nav-click-effect px-4 py-3 rounded-xl text-sm font-semibold tracking-wide">Layanan</a>
-                    <a href="#fasilitas" class="nav-link nav-link-enhanced nav-click-effect px-4 py-3 rounded-xl text-sm font-semibold tracking-wide">Fasilitas</a>
-                    <a href="#kontak" class="nav-link nav-link-enhanced nav-click-effect px-4 py-3 rounded-xl text-sm font-semibold tracking-wide">Kontak</a>
+            <!-- Navigation Menu - Center -->
+            <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2">
+                <div class="flex items-center space-x-2">
+                    <a href="#beranda" class="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-sm font-medium">Beranda</a>
+                    <a href="#staf" class="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-sm font-medium">Staf Ahli</a>
+                    <a href="#layanan" class="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-sm font-medium">Layanan</a>
+                    <a href="#fasilitas" class="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-sm font-medium">Fasilitas</a>
+                    <a href="#artikel" class="px-4 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-sm font-medium">Artikel</a>
                 </div>
             </div>
             
-            <!-- Dark Mode Toggle - Right -->
+            <!-- Placeholder for Right Side (maintain layout) -->
             <div class="hidden md:flex flex-shrink-0">
-                <button id="darkModeToggle" class="navbar-dark-toggle px-4 py-2.5 rounded-xl text-white border border-white/20 hover:bg-white/10 transition-all duration-300" onclick="toggleDarkMode()" title="Toggle Dark Mode">
-                    <i class="fas fa-moon text-base" id="darkModeIcon"></i>
-                </button>
+                <!-- Button removed but container preserved for layout balance -->
             </div>
             
-            <!-- Mobile menu button - Right (only visible on mobile) -->
-            <div class="md:hidden flex justify-end">
-                <button id="mobile-menu-button" class="mobile-menu-button-enhanced text-white">
+            <!-- Mobile menu button - Right -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300">
                     <i class="fas fa-bars text-lg"></i>
                 </button>
             </div>
         </div>
         
-        <!-- Enhanced Mobile menu -->
-        <div id="mobile-menu" class="md:hidden mobile-menu-enhanced mobile-menu-slide">
-            <div class="px-3 pt-3 pb-4 space-y-2">
-                <a href="#beranda" class="nav-link nav-link-enhanced nav-click-effect block px-4 py-3 rounded-xl text-base font-semibold">Beranda</a>
-                <a href="#staf" class="nav-link nav-link-enhanced nav-click-effect block px-4 py-3 rounded-xl text-base font-semibold">Staf Ahli</a>
-                <a href="#layanan" class="nav-link nav-link-enhanced nav-click-effect block px-4 py-3 rounded-xl text-base font-semibold">Layanan</a>
-                <a href="#fasilitas" class="nav-link nav-link-enhanced nav-click-effect block px-4 py-3 rounded-xl text-base font-semibold">Fasilitas</a>
-                <a href="#kontak" class="nav-link nav-link-enhanced nav-click-effect block px-4 py-3 rounded-xl text-base font-semibold">Kontak</a>
-                
-                <!-- Dark Mode Toggle for Mobile -->
-                <button class="mobile-dark-toggle flex items-center px-4 py-3 rounded-xl text-base font-semibold text-white hover:bg-white/10 transition-all duration-300 w-full" onclick="toggleDarkMode()">
-                    <i class="fas fa-moon mr-3"></i>
-                    <span>Dark Mode</span>
-                </button>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-black/40 backdrop-blur-lg border-t border-white/10">
+            <div class="px-4 py-4 space-y-2">
+                <a href="#beranda" class="block px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-base font-medium">Beranda</a>
+                <a href="#staf" class="block px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-base font-medium">Staf Ahli</a>
+                <a href="#layanan" class="block px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-base font-medium">Layanan</a>
+                <a href="#fasilitas" class="block px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-base font-medium">Fasilitas</a>
+                <a href="#artikel" class="block px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 text-base font-medium">Artikel</a>
             </div>
         </div>
     </div>
 </nav> 
+
+<script>
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking on a link
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    }
+});
+</script> 

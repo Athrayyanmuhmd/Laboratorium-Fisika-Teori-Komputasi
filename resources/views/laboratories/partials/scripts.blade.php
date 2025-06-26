@@ -3,92 +3,7 @@
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     
-    // Enhanced Dark Mode Toggle with Animation
-    function toggleDarkMode() {
-        const html = document.documentElement;
-        const icons = document.querySelectorAll('#darkModeIcon, .mobile-dark-toggle i');
-        const toggleBtns = document.querySelectorAll('#darkModeToggle, .mobile-dark-toggle');
-        const isDark = html.classList.contains('dark');
-        
-        // Add loading animation
-        toggleBtns.forEach(btn => {
-            btn.style.transform = 'scale(0.9) rotate(180deg)';
-        });
-        
-        icons.forEach(icon => {
-            icon.style.opacity = '0';
-        });
-        
-        setTimeout(() => {
-            if (isDark) {
-                html.classList.remove('dark');
-                icons.forEach(icon => {
-                    icon.className = icon.className.replace('fa-sun', 'fa-moon');
-                });
-                localStorage.setItem('darkMode', 'false');
-            } else {
-                html.classList.add('dark');
-                icons.forEach(icon => {
-                    icon.className = icon.className.replace('fa-moon', 'fa-sun');
-                });
-                localStorage.setItem('darkMode', 'true');
-            }
-            
-            // Restore icons and buttons
-            icons.forEach(icon => {
-                icon.style.opacity = '1';
-            });
-            
-            toggleBtns.forEach(btn => {
-                btn.style.transform = 'scale(1) rotate(0deg)';
-            });
-            
-            // Add success feedback
-            setTimeout(() => {
-                toggleBtns.forEach(btn => {
-                    btn.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        btn.style.transform = 'scale(1)';
-                    }, 150);
-                });
-            }, 100);
-        }, 200);
-    }
-
-    // Load dark mode preference with system detection
-    function initDarkMode() {
-        const darkMode = localStorage.getItem('darkMode');
-        const html = document.documentElement;
-        const icons = document.querySelectorAll('#darkModeIcon, .mobile-dark-toggle i');
-        
-        // Check system preference if no saved preference
-        if (darkMode === null) {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (prefersDark) {
-                html.classList.add('dark');
-                icons.forEach(icon => {
-                    icon.className = icon.className.replace('fa-moon', 'fa-sun');
-                });
-                localStorage.setItem('darkMode', 'true');
-            } else {
-                html.classList.remove('dark');
-                icons.forEach(icon => {
-                    icon.className = icon.className.replace('fa-sun', 'fa-moon');
-                });
-                localStorage.setItem('darkMode', 'false');
-            }
-        } else if (darkMode === 'true') {
-            html.classList.add('dark');
-            icons.forEach(icon => {
-                icon.className = icon.className.replace('fa-moon', 'fa-sun');
-            });
-        } else {
-            html.classList.remove('dark');
-            icons.forEach(icon => {
-                icon.className = icon.className.replace('fa-sun', 'fa-moon');
-            });
-        }
-    }
+    // Mobile Menu and Navigation Management
 
     // Enhanced Mobile Menu with Touch Gestures
     class MobileMenuManager {
@@ -483,7 +398,7 @@
     // Initialize all managers when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize dark mode first
-        initDarkMode();
+        // Dark mode removed - now using light theme only
         
         // Initialize all managers
         window.mobileMenuManager = new MobileMenuManager();
