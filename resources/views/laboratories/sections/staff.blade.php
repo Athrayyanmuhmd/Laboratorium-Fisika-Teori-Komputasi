@@ -160,7 +160,7 @@
 }
 </style>
 
-<script>
+<script> 
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('staffContainer');
     const prevBtn = document.getElementById('prevBtn');
